@@ -23,8 +23,8 @@
                 <div class="header-right">
                     <!-- notification start -->
                     <div class="notification-box ml-15 d-none d-md-flex">
-                        <button class="dropdown-toggle" type="button" id="notification"
-                            data-bs-toggle="dropdown" aria-expanded="false">
+                        <button class="dropdown-toggle" type="button" id="notification" data-bs-toggle="dropdown"
+                            aria-expanded="false">
                             <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -87,8 +87,8 @@
                     <!-- notification end -->
                     <!-- message start -->
                     <div class="header-message-box ml-15 d-none d-md-flex">
-                        <button class="dropdown-toggle" type="button" id="message"
-                            data-bs-toggle="dropdown" aria-expanded="false">
+                        <button class="dropdown-toggle" type="button" id="message" data-bs-toggle="dropdown"
+                            aria-expanded="false">
                             <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -172,15 +172,12 @@
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profile">
                             <li>
                                 <div class="author-info flex items-center !p-1">
-                                    <div class="image">
-                                        <img src="assets/images/profile/profile-image.png" alt="image" />
-                                    </div>
                                     <div class="content">
                                         <h4 class="text-sm">
-                                            Adam Joe
+                                            Admin
                                         </h4>
                                         <a class="text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white text-xs"
-                                            href="#">{{ Auth::user()->email }}</a>
+                                            href="{{ route('profile.edit') }}">{{ Auth::user()->email }}</a>
                                     </div>
                                 </div>
                             </li>
@@ -216,8 +213,7 @@
                                     <i class="lni lni-exit"></i>
                                     Sign Out
                                 </a>
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                    class="d-none">
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                     @csrf
                                 </form>
                             </li>

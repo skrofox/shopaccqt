@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Admin\CategoryController;
@@ -24,8 +25,6 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['is_admin'])->prefix('/admin')->name('admin.')->group(function() {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
 
-
-
     //Route user
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
@@ -44,6 +43,21 @@ Route::middleware(['is_admin'])->prefix('/admin')->name('admin.')->group(functio
     Route::get('/categories/{id}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
     Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('categories.update');
     Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+
+
+    //Route products (has soft delete)
+    Route::prefix('/products')->name('products.')->group(function() {
+        Route::get('/', [ProductController::class, 'index'])->name('index');
+        Route::get('/{id}', [ProductController::class, 'show'])->name('show');
+        Route::get('/create', [ProductController::class, 'create'])->name('create');
+        Route::post('/', [ProductController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [ProductController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [ProductController::class, 'update'])->name('update');
+        Route::delete('/{id}', [ProductController::class, 'destroy'])->name('destroy');
+        Route::get('/trash', [ProductController::class, 'trash_show'])->name('trash');
+        Route::post('/{id}/restore', [ProductController::class, 'restore'])->name('restore');
+        Route::delete('/{id}/force', [ProductController::class, 'forceDelete'])->name('force');
+    });
 });
 
 require __DIR__.'/auth.php';

@@ -7,3 +7,4 @@ php artisan storage:link
 
 php artisan migrate:refresh
 php artisan db:seed --class=UserSeeder
+php artisan db:seed --class=CategorySeeder
