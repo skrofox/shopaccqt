@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\Admin\CategoryController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -35,6 +36,14 @@ Route::middleware(['is_admin'])->prefix('/admin')->name('admin.')->group(functio
     Route::get('/users/trash', [UserController::class, 'trash_show'])->name('users.trash');
     Route::post('/users/{id}/restore', [UserController::class, 'restore'])->name('users.restore');
     Route::delete('/users/{id}/force', [UserController::class, 'forceDelete'])->name('users.force');
+
+    // Route categories (no soft delete)
+    Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+    Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
+    Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+    Route::get('/categories/{id}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
+    Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('categories.update');
+    Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 });
 
 require __DIR__.'/auth.php';
