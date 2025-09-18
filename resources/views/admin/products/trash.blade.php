@@ -54,7 +54,7 @@
                                     <form action="{{ route('admin.products.force', $product->id) }}" method="POST" style="display:inline-block" onsubmit="return confirm('Xóa Sản Phẩm này?');">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
+                                        <button type="submit" class="btn btn-sm btn-danger">Xóa luôn</button>
                                     </form>
                                 </td>
                             </tr>

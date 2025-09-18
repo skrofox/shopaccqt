@@ -83,7 +83,9 @@ class ProductController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $product = Product::findOrFail($id);
+        $categories = Category::all();
+        return view('admin.products.edit', compact('product', 'categories'));
     }
 
     /**
@@ -104,7 +106,8 @@ class ProductController extends Controller
         $product->delete();
         return redirect()->route('admin.products.index')->with('success', 'Xóa Sản Phẩm ');
     }
-    public function trash(){
+    public function trash()
+    {
         $products = Product::onlyTrashed()->paginate(10);
         return view('admin.products.trash', compact('products'));
     }
