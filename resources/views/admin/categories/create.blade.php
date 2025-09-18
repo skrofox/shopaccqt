@@ -19,7 +19,8 @@
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="card-style mb-30">
-                            <form action="{{ route('admin.categories.store') }}" method="post">
+                            <form action="{{ route('admin.categories.store') }}" method="post"
+                                enctype="multipart/form-data">
                                 @csrf
                                 <h6 class="mb-25">Nhập</h6>
 
@@ -42,11 +43,12 @@
                                     <input type="text" name="slug" value="{{ old('slug') }}" />
                                 </div>
                                 <div class="input-style-1">
-                                    <label>Ảnh (URL)</label>
-                                    <input type="text" name="image" value="{{ old('image') }}" />
+                                    <label>Ảnh</label>
+                                    <input type="file" name="image" value="{{ old('image') }}" />
                                 </div>
                                 <div class="form-check form-switch toggle-switch mb-30">
-                                    <input class="form-check-input" type="checkbox" name="is_active" value="1" id="is_active" {{ old('is_active') ? 'checked' : '' }} />
+                                    <input class="form-check-input" type="checkbox" name="is_active" value="1"
+                                        id="is_active" {{ old('is_active') ? 'checked' : '' }} />
                                     <label class="form-check-label" for="is_active">Kích hoạt</label>
                                 </div>
 
@@ -60,5 +62,3 @@
         </div>
     </section>
 @endsection
-
-

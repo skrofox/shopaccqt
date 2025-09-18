@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
@@ -30,17 +31,24 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+
         $valid = $request->validate([
             'name' => 'required|string|max:100',
             'slug' => 'required|string|max:150|unique:categories,slug',
-            'image' => 'nullable|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'is_active' => 'nullable|boolean',
         ]);
+
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            //
+            $imagePath = $request->file('image')->store('categories', 'public');
+        }
 
         Category::create([
             'name' => $valid['name'],
             'slug' => $valid['slug'],
-            'image' => $valid['image'] ?? null,
+            'image' => $imagePath,
             'is_active' => (bool)($valid['is_active'] ?? false),
         ]);
 
@@ -74,13 +82,22 @@ class CategoryController extends Controller
         $valid = $request->validate([
             'name' => 'required|string|max:100',
             'slug' => 'required|string|max:150|unique:categories,slug,' . $category->id,
-            'image' => 'nullable|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'is_active' => 'nullable|boolean',
         ]);
 
+        if ($request->hasFile('image')) {
+            if ($category->image && Storage::exists('public/' . $category->image)) {
+                Storage::delete('public/' . $category->image);
+            }
+            $imagePath = $request->file('image')->store('categories', 'public');
+        } else {
+            $imagePath = $category->image;
+        }
+
         $category->name = $valid['name'];
         $category->slug = $valid['slug'];
-        $category->image = $valid['image'] ?? null;
+        $category->image = $imagePath;
         $category->is_active = (bool)($valid['is_active'] ?? false);
         $category->save();
 

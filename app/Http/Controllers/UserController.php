@@ -14,7 +14,7 @@ class UserController extends Controller
     {
         //
         $users = User::where('role', 0)->paginate(10);
-        return view('admin.tables', compact('users'));
+        return view('admin.users.tables', compact('users'));
     }
 
     /**
@@ -23,7 +23,7 @@ class UserController extends Controller
     public function create()
     {
         //
-        return view('admin.form-elements');
+        return view('admin.users.form-elements');
     }
 
     /**
@@ -62,7 +62,7 @@ class UserController extends Controller
     public function edit(string $id)
     {
         $user = User::find($id);
-        return view('admin.edit-users', compact('user'));
+        return view('admin.users.edit-users', compact('user'));
     }
 
     /**
@@ -118,7 +118,7 @@ class UserController extends Controller
     public function trash_show()
     {
         $users = User::onlyTrashed()->where('role', 0)->paginate(10);
-        return view('admin.user_trash', compact('users'));
+        return view('admin.users.user_trash', compact('users'));
     }
 
     /**

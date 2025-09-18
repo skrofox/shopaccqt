@@ -1,13 +1,13 @@
 <aside class="sidebar-nav-wrapper">
     <div class="navbar-logo">
-        <a href="index.html">
+        <a href="{{ route('admin.dashboard') }}">
             <img src="assets/images/logo/logo.svg" alt="logo" />
         </a>
     </div>
     <nav class="sidebar-nav">
         <ul>
             <li class="nav-item nav-item-has-children">
-                <a href="#0" data-bs-toggle="collapse" data-bs-target="#ddmenu_1" aria-controls="ddmenu_1"
+                <a href="{{ route('admin.dashboard') }}" data-bs-toggle="collapse" data-bs-target="#ddmenu_1" aria-controls="ddmenu_1"
                     aria-expanded="false" aria-label="Toggle navigation">
                     <span class="icon">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
