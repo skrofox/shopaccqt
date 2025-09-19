@@ -12,6 +12,7 @@ class Product extends Model
     protected $fillable = [
         'name',
         'description',
+        'price',
         'slug',
         'category_id',
         'is_active'
@@ -25,5 +26,16 @@ class Product extends Model
     public function images()
     {
         return $this->hasMany(ProductImage::class);
+    }
+
+    public function getFormattedPriceAttribute()
+    {
+        return number_format($this->price, 2);
+    }
+
+
+    public function stocks()
+    {
+        return $this->hasMany(Stock::class);
     }
 }

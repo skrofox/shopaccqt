@@ -43,6 +43,7 @@
                         <div class="card-style mb-30">
                             <form action="{{ route('admin.products.update', $product->id) }}" method="post" enctype="multipart/form-data">
                                 @csrf
+                                @method('PUT')
                                 <h6 class="mb-25">Nhập</h6>
                                 <div class="input-style-1">
                                     <label>Tên Sản Phẩm</label>
@@ -50,11 +51,9 @@
                                 </div>
                                 <div class="input-style-1">
                                     <label>Mô Tả</label>
-                                    <textarea name="description" id="" placeholder="Nhập mô tả sản phẩm..." cols="30" rows="10">
-                                        {{ $product->description }}
-                                    </textarea>
+                                    <textarea name="description" id="" placeholder="Nhập mô tả sản phẩm..." rows="10">{{ $product->description }}</textarea>
                                 </div>
-                                <h6 class="mb-25">Selects</h6>
+                                <h6 class="mb-25">Danh Mục</h6>
                                 <!-- end select -->
                                 <div class="select-style-2">
                                     <div class="select-position">
@@ -68,7 +67,7 @@
                                 </div>
                                 <h6 class="mb-25">Trạng Thái</h6>
                                 <div class="form-check form-switch toggle-switch mb-30">
-                                    <input class="form-check-input" type="checkbox" id="toggleSwitch1" name="is_active" />
+                                    <input class="form-check-input" type="checkbox" id="toggleSwitch1" name="is_active" {{ $product->is_active ? 'checked' : '' }} />
                                     <label class="form-check-label" for="toggleSwitch1">Kích Hoạt</label>
                                 </div>
                         </div>
@@ -76,6 +75,13 @@
                     <!-- end col -->
                     <div class="col-lg-6">
                         <!-- input style start -->
+                        <div class="card-style mb-30">
+                            <h6 class="mb-25">Sửa Giá</h6>
+                            <div class="input-style-1">
+                                <label>Giá</label>
+                                <input type="number" name="price" required  value="{{ sprintf('%.2f', $product->price) }}"/>
+                            </div>
+                        </div>
                         <div class="card-style mb-30">
                             <h6 class="mb-25">Sửa Ảnh</h6>
                             <div class="input-style-1">

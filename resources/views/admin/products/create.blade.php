@@ -75,6 +75,13 @@
                     <div class="col-lg-6">
                         <!-- input style start -->
                         <div class="card-style mb-30">
+                            <h6 class="mb-25">Giá Sản Phẩm</h6>
+                            <div class="input-style-1">
+                                <label>Giá</label>
+                                <input type="number" name="price" placeholder="Giá..." required/>
+                            </div>
+                        </div>
+                        <div class="card-style mb-30">
                             <h6 class="mb-25">Thêm Ảnh</h6>
                             <div class="input-style-1">
                                 <label>Chọn ảnh</label>

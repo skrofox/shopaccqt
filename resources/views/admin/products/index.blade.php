@@ -29,7 +29,7 @@
                             <th>#</th>
                             <th>Danh Mục</th>
                             <th>Tên</th>
-                            <th>Mô Tả</th>
+                            <th>Giá</th>
                             <th>Slug</th>
                             <th>Ảnh</th>
                             <th>Trạng thái</th>
@@ -42,7 +42,8 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $product->category->name }}</td>
                                 <td>{{ $product->name }}</td>
-                                <td>{{ $product->description }}</td>
+                                {{-- <td>{{ number_format($product->price, 2) }}</td> --}}
+                                <td>{{ $product->formatted_price }}</td>
                                 <td>{{ $product->slug }}</td>
                                 <td>{{ $product->images->count() }}</td>
                                 <td>

@@ -70,7 +70,7 @@
                     </li>
                 </ul>
             </li>
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a href="">
                     <span class="icon">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
@@ -81,10 +81,10 @@
                     </span>
                     <span class="text">Invoice</span>
                 </a>
-            </li>
+            </li> --}}
             <li class="nav-item nav-item-has-children">
-                <a href="#0" class="collapsed" data-bs-toggle="collapse" data-bs-target="#ddmenu_categories"
-                    aria-controls="ddmenu_categories" aria-expanded="false" aria-label="Toggle navigation">
+                <a href="#0" class="collapsed" data-bs-toggle="collapse" data-bs-target="#ddmenu_products"
+                    aria-controls="ddmenu_products" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="icon">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
@@ -96,7 +96,7 @@
                     </span>
                     <span class="text">Quản Lý Sản Phẩm</span>
                 </a>
-                <ul id="ddmenu_categories" class="collapse dropdown-nav">
+                <ul id="ddmenu_products" class="collapse dropdown-nav">
                     <li>
                         <a href="{{ route('admin.products.index') }}"> Danh Sách Sản Phẩm </a>
                     </li>
@@ -108,7 +108,30 @@
                     </li>
                 </ul>
             </li>
-            <li class="nav-item">
+            <li class="nav-item nav-item-has-children">
+                <a href="#0" class="collapsed" data-bs-toggle="collapse" data-bs-target="#ddmenu_stocks"
+                    aria-controls="ddmenu_stocks" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="icon">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M11.8097 1.66667C11.8315 1.66667 11.8533 1.6671 11.875 1.66796V4.16667C11.875 5.43232 12.901 6.45834 14.1667 6.45834H16.6654C16.6663 6.48007 16.6667 6.50186 16.6667 6.5237V16.6667C16.6667 17.5872 15.9205 18.3333 15 18.3333H5.00001C4.07954 18.3333 3.33334 17.5872 3.33334 16.6667V3.33334C3.33334 2.41286 4.07954 1.66667 5.00001 1.66667H11.8097ZM6.66668 7.70834C6.3215 7.70834 6.04168 7.98816 6.04168 8.33334C6.04168 8.67851 6.3215 8.95834 6.66668 8.95834H10C10.3452 8.95834 10.625 8.67851 10.625 8.33334C10.625 7.98816 10.3452 7.70834 10 7.70834H6.66668ZM6.04168 11.6667C6.04168 12.0118 6.3215 12.2917 6.66668 12.2917H13.3333C13.6785 12.2917 13.9583 12.0118 13.9583 11.6667C13.9583 11.3215 13.6785 11.0417 13.3333 11.0417H6.66668C6.3215 11.0417 6.04168 11.3215 6.04168 11.6667ZM6.66668 14.375C6.3215 14.375 6.04168 14.6548 6.04168 15C6.04168 15.3452 6.3215 15.625 6.66668 15.625H13.3333C13.6785 15.625 13.9583 15.3452 13.9583 15C13.9583 14.6548 13.6785 14.375 13.3333 14.375H6.66668Z" />
+                            <path
+                                d="M13.125 2.29167L16.0417 5.20834H14.1667C13.5913 5.20834 13.125 4.74197 13.125 4.16667V2.29167Z" />
+                        </svg>
+                    </span>
+                    <span class="text">Quản Lý Kho</span>
+                </a>
+                <ul id="ddmenu_stocks" class="collapse dropdown-nav">
+                    <li>
+                        <a href="{{ route('admin.products.index') }}"> Danh Sách Tồn Kho </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.products.create') }}"> Thêm Tồn Kho </a>
+                    </li>
+                </ul>
+            </li>
+            {{-- <li class="nav-item">
                 <a href="invoice.html">
                     <span class="icon">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
@@ -119,7 +142,7 @@
                     </span>
                     <span class="text">Invoice</span>
                 </a>
-            </li>
+            </li> --}}
             <li class="nav-item nav-item-has-children">
                 <a href="#0" class="collapsed" data-bs-toggle="collapse" data-bs-target="#ddmenu_3"
                     aria-controls="ddmenu_3" aria-expanded="false" aria-label="Toggle navigation">

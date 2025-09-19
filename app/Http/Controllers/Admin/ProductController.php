@@ -38,8 +38,9 @@ class ProductController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'required|string|nullable',
+            'description' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',
+            'price' => 'required|numeric|min:0',
             'image' => 'nullable|array',
             'image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
@@ -49,6 +50,7 @@ class ProductController extends Controller
             'description' => $request->description,
             'slug' => Str::slug($request->name),
             'category_id' => $request->category_id,
+            'price' => $request->price,
             'is_active' => $request->has('is_active') ? 1 : 0,
         ]);
 
@@ -75,7 +77,8 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $product = Product::with(['category', 'images'])->findOrFail($id);
+        return view('admin.products.show', compact('product'));
     }
 
     /**
@@ -93,7 +96,38 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'category_id' => 'required|exists:categories,id',
+            'price' => 'required|numeric|min:0',
+            'image' => 'nullable|array',
+            'image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $product = Product::findOrFail($id);
+        $product->update([
+            'name' => $request->name,
+            'description' => $request->description,
+            'slug' => Str::slug($request->name),
+            'category_id' => $request->category_id,
+            'price' => $request->price,
+            'is_active' => $request->has('is_active') ? 1 : 0,
+        ]);
+
+        if ($request->hasFile('image')) {
+            foreach ($request->file('image') as $imageFile) {
+                $imagePath = $imageFile->store('products', 'public');
+
+                ProductImage::create([
+                    'name' => $imagePath,
+                    'product_id' => $product->id,
+                    'url' => Storage::url($imagePath),
+                ]);
+            }
+        }
+
+        return redirect()->route('admin.products.index')->with('success', 'Cập nhật sản phẩm thành công');
     }
 
     /**
@@ -110,5 +144,27 @@ class ProductController extends Controller
     {
         $products = Product::onlyTrashed()->paginate(10);
         return view('admin.products.trash', compact('products'));
+    }
+
+    public function restore(string $id)
+    {
+        $product = Product::onlyTrashed()->findOrFail($id);
+        $product->restore();
+        return redirect()->route('admin.products.trash')->with('success', 'Khôi phục sản phẩm thành công');
+    }
+
+    public function forceDelete(string $id)
+    {
+        $product = Product::onlyTrashed()->with('images')->findOrFail($id);
+
+        foreach ($product->images as $image) {
+            if ($image->name && Storage::disk('public')->exists($image->name)) {
+                Storage::disk('public')->delete($image->name);
+            }
+            $image->delete();
+        }
+
+        $product->forceDelete();
+        return redirect()->route('admin.products.trash')->with('success', 'Đã xóa vĩnh viễn sản phẩm');
     }
 }

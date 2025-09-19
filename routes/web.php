@@ -2,9 +2,10 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\StockController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\Admin\CategoryController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -57,6 +58,16 @@ Route::middleware(['is_admin'])->prefix('/admin')->name('admin.')->group(functio
         Route::delete('/{id}/force', [ProductController::class, 'forceDelete'])->name('force');
         Route::get('/{id}', [ProductController::class, 'show'])->name('show');
         Route::delete('/{id}', [ProductController::class, 'destroy'])->name('destroy');
+    });
+
+    //Route stock (no soft delete)
+    Route::prefix('/stocks')->name('.stocks')->group(function() {
+        Route::get('/', [StockController::class, 'index'])->name('index');
+        Route::get('/create', [StockController::class, 'create'])->name('create');
+        Route::post('/', [StockController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [StockController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [StockController::class, 'update'])->name('update');
+        Route::delete('/{id}', [StockController::class, 'destroy'])->name('destroy');
     });
 });
 

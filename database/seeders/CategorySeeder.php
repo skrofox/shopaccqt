@@ -23,7 +23,6 @@ class CategorySeeder extends Seeder
             'Son Kem',
             'Son Bóng',
             'Son Lót Môi',
-
         ];
 
         for($i = 0; $i <= count($categoryNames) - 1; $i++) {

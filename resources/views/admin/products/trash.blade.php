@@ -50,8 +50,11 @@
                                     @endif
                                 </td>
                                 <td class="text-end">
-                                    <a href="{{ route('admin.products.restore', $product->id) }}" class="btn btn-sm btn-primary">Khôi Phục</a>
-                                    <form action="{{ route('admin.products.force', $product->id) }}" method="POST" style="display:inline-block" onsubmit="return confirm('Xóa Sản Phẩm này?');">
+                                    <form action="{{ route('admin.products.restore', $product->id) }}" method="POST" style="display:inline-block">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm btn-primary">Khôi Phục</button>
+                                    </form>
+                                    <form action="{{ route('admin.products.force', $product->id) }}" method="POST" style="display:inline-block" onsubmit="return confirm('Xóa Sản Phẩm này vĩnh viễn?');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-danger">Xóa luôn</button>
