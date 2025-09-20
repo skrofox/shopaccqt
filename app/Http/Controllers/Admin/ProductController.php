@@ -15,10 +15,20 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         //
-        $products = Product::paginate(10);
+        $query = $request->input('query');
+        $products = Product::query();
+
+        if ($query) {
+            $products = Product::when($query, function ($q) use ($query) {
+                $q->where('name', 'like', "%{$query}%")
+                    ->orWhere('description', 'like', "%{$query}%");
+            });
+        }
+
+        $products = $products->paginate(10);
         return view('admin.products.index', compact('products'));
     }
 
@@ -45,10 +55,12 @@ class ProductController extends Controller
             'image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
+        $slug = Str::slug($request->name) . '-' . time() . '-' . uniqid();
+
         $product = Product::create([
             'name' => $request->name,
             'description' => $request->description,
-            'slug' => Str::slug($request->name),
+            'slug' => $slug,
             'category_id' => $request->category_id,
             'price' => $request->price,
             'is_active' => $request->has('is_active') ? 1 : 0,
@@ -106,10 +118,11 @@ class ProductController extends Controller
         ]);
 
         $product = Product::findOrFail($id);
+        $slug = Str::slug($request->name) . '-' . time() . '-' . uniqid();
         $product->update([
             'name' => $request->name,
             'description' => $request->description,
-            'slug' => Str::slug($request->name),
+            'slug' => $slug,
             'category_id' => $request->category_id,
             'price' => $request->price,
             'is_active' => $request->has('is_active') ? 1 : 0,

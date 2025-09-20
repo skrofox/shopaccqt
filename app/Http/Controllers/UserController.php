@@ -10,10 +10,25 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         //
-        $users = User::where('role', 0)->paginate(10);
+        $query = $request->input('query');
+
+        $users = User::where('role', 0);
+
+        if ($query) {
+            $users->where(function ($q) use ($query) {
+                $q->where('name', 'like', "%{$query}%")
+                    ->orWhere('email', 'like', "%{$query}%");
+            });
+        }
+        $users = $users->paginate(10);
+        if ($query && $users->isEmpty()) {
+            return view('admin.users.tables', compact('users'))->with('message', 'Không tìm thấy người dùng nào');
+        }
+
+
         return view('admin.users.tables', compact('users'));
     }
 
@@ -53,7 +68,8 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $user = User::findOrFail($id);
+        return view('admin.users.show', compact('user'));
     }
 
     /**

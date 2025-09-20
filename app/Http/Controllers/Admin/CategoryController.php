@@ -12,9 +12,19 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::orderByDesc('created_at')->paginate(10);
+        $query = $request->input('query');
+        $categories = Category::query();
+
+        if ($query) {
+            $categories->where(function ($q) use ($query) {
+                $q->where('name', 'like', "%{$query}%")
+                    ->orWhere('slug', 'like', "%{$query}%");
+            });
+        }
+
+        $categories = $categories->paginate(10);
         return view('admin.categories.index', compact('categories'));
     }
 
@@ -60,7 +70,8 @@ class CategoryController extends Controller
      */
     public function show(string $id)
     {
-        // Không dùng trong admin hiện tại
+        $category = Category::with('products')->findOrFail($id);
+        return view('admin.categories.show', compact('category'));
     }
 
     /**

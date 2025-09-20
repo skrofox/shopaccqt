@@ -10,9 +10,10 @@
                         </button>
                     </div>
                     <div class="header-search d-none d-md-flex">
-                        <form action="#">
-                            <input type="text" placeholder="Search..." />
-                            <button>
+                        {{-- {{ route(Route::currentRouteName()) }} --}}
+                        <form action="" method="GET">
+                            <input type="text" name="query" id="search" placeholder="Search..." value="{{ request()->query('query') }}"/>
+                            <button type="submit">
                                 <i class="lni lni-search-alt"></i>
                             </button>
                         </form>

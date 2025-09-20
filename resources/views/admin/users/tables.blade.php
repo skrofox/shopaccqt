@@ -42,8 +42,11 @@
                         <div class="card-style mb-30">
                             <h6 class="mb-10">Data Table</h6>
                             <p class="text-sm mb-20">
-                                For basic styling—light padding and only horizontal
-                                dividers—use the class table.
+                                @if (session('message'))
+                                    <div class="alert alert-success">
+                                        {{ session('message') }}
+                                    </div>
+                                @endif
                             </p>
                             <div class="table-wrapper table-responsive">
                                 <table class="table">
@@ -88,6 +91,7 @@
                                                 </td>
                                                 <td>
                                                     <div class="action" style="display: flex; gap: 8px; align-items: center;">
+                                                        {{-- {{ dd($user->id, $user) }} --}}
                                                         <a href="{{ route('admin.users.edit', $user->id) }}" class="text-primary" title="Chỉnh sửa">
                                                             <i class="lni lni-pencil"></i>
                                                         </a>
@@ -106,7 +110,8 @@
                                     @endforeach
                                 </table>
                                 {{-- Pagination --}}
-                                {{ $users->links() }}
+                                {{-- {{ $users->links() }} --}}
+                                {{ $users->withQueryString()->links() }}
                                 <!-- end table -->
                             </div>
                         </div>
