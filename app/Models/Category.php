@@ -19,4 +19,9 @@ class Category extends Model
     {
         return $this->hasMany(Product::class);
     }
+
+    public function getTotalProductsAttribute()
+    {
+        return $this->products()->where('is_active', 1)->count();
+    }
 }

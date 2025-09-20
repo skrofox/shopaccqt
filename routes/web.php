@@ -6,12 +6,22 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\StockController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ShopController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+// Route::get('/', function () {
+//     return view('NiceShop.index');
+// })->name('home');
+
+Route::get('/', [ShopController::class, 'index'])->name('home');
+
+Route::get('/search-products', [ShopController::class, 'search'])->name('product-search');
+
+Route::get('/product/{slug}', [ShopController::class, 'show'])->name('product.show');
+
+Route::get('/category', [ShopController::class, 'category'])->name('category');
+// Route::get('/categories/{slug}', [ShopController::class, 'category'])->name('category');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -21,6 +31,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::post('/cart', [ShopController::class, 'addToCart'])->name('cart.action');
 });
 
 //Admin route

@@ -105,7 +105,7 @@
             <!-- End Col -->
         </div>
         <!-- End Row -->
-        <div class="row">
+        {{-- <div class="row">
             <div class="col-lg-7">
                 <div class="card-style mb-30">
                     <div class="title d-flex flex-wrap justify-content-between">
@@ -187,9 +187,9 @@
                 </div>
             </div>
             <!-- End Col -->
-        </div>
+        </div> --}}
         <!-- End Row -->
-        <div class="row">
+        {{-- <div class="row">
             <div class="col-lg-5">
                 <div class="card-style mb-30">
                     <div class="title d-flex justify-content-between align-items-center">
@@ -468,9 +468,9 @@
                 </div>
             </div>
             <!-- End Col -->
-        </div>
+        </div> --}}
         <!-- End Row -->
-        <div class="row">
+        {{-- <div class="row">
             <div class="col-lg-7">
                 <div class="card-style mb-30">
                     <div class="title d-flex flex-wrap align-items-center justify-content-between">
@@ -624,9 +624,9 @@
                 </div>
             </div>
             <!-- End Col -->
-        </div>
+        </div> --}}
         <!-- End Row -->
-        <div class="row">
+        {{-- <div class="row">
             <div class="col-lg-5">
                 <div class="card-style calendar-card mb-30">
                     <div id="calendar-mini"></div>
@@ -870,7 +870,7 @@
                 </div>
             </div>
             <!-- End Col -->
-        </div>
+        </div> --}}
         <!-- End Row -->
     </div>
     <!-- end container -->

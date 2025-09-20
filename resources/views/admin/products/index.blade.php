@@ -44,7 +44,7 @@
                                 <td>{{ $product->name }}</td>
                                 {{-- <td>{{ number_format($product->price, 2) }}</td> --}}
                                 <td>{{ $product->formatted_price }}</td>
-                                <td>{{ $product->slug }}</td>
+                                <td class="text-truncate" style="max-width: 50px" title="{{ $product->slug }}">{{ $product->slug }}</td>
                                 <td>{{ $product->images->count() }}</td>
                                 <td>
                                     @if($product->is_active)
