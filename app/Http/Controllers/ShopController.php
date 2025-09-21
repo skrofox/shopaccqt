@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CartItems;
+use App\Models\CartItem;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Stock;
@@ -65,11 +65,8 @@ class ShopController extends Controller
             ->first();
 
         if ($stock) {
-            $stock->on_hand -= $quantity;
-            $stock->save();
-
             //kiem tra nguoi dung da co cart(gio hang) chua
-            $cart = CartItems::where('user_id', $user_id)
+            $cart = CartItem::where('user_id', $user_id)
                 ->where('product_id', $product_id)
                 ->first();
 
@@ -77,7 +74,7 @@ class ShopController extends Controller
                 $cart->quantity += $quantity;
                 $cart->save();
             } else {
-                CartItems::create([
+                CartItem::create([
                     'user_id' => $user_id,
                     'product_id' => $product_id,
                     'quantity' => $quantity,
@@ -87,5 +84,69 @@ class ShopController extends Controller
         } else {
             return redirect()->back()->with('error', 'Kho hàng không đủ số lượng');
         }
+    }
+
+    public function cart()
+    {
+        // $carts = CartItems::where('user_id', Auth::user()->id)->get();
+        $carts = CartItem::with(['product.category', 'product.images', 'product.stocks'])
+            ->where('user_id', Auth::id())
+            ->get();
+
+        return view('NiceShop.cart', compact('carts'));
+    }
+
+    public function removeFromCart(string $id)
+    {
+        $cart = CartItem::find($id);
+        $cart->delete();
+        return redirect()->back();
+    }
+
+    // public function login(){
+    //     return view('NiceShop.login');
+    // }
+
+    // public function register(){
+    //     return view('NiceShop.register');
+    // }
+
+
+    public function cartUpdate(Request $request, $id)
+    {
+        $cart = CartItem::where('id', $id)
+            ->with('product')
+            ->firstOrFail();
+
+        $quantity = (int)$request->input('quantity');
+
+        if ($quantity < 1) {
+            return response()->json([
+                'error' => 'Số lượng không hợp lệ',
+            ], 422);
+        }
+
+        if ($quantity > $cart->product->stocks->on_hand) {
+            return response()->json([
+                'error' => 'Quá trớn rồi đó',
+            ]);
+        }
+
+        //Cập nhật cart
+        $cart->quantity = $quantity;
+        $cart->total_price = $cart->quantity * $cart->product->price;
+        $cart->save();
+
+        $cartTotal = CartItem::where('user_id', Auth::user()->id)->sum('total_price');
+
+        return response()->json([
+            'itemTotal' => number_format($cart->total_price),
+            'cartTotal' => number_format($cartTotal),
+        ]);
+    }
+
+    public function checkout()
+    {
+        return view('NiceShop.checkout');
     }
 }

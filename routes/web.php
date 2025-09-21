@@ -23,6 +23,10 @@ Route::get('/product/{slug}', [ShopController::class, 'show'])->name('product.sh
 Route::get('/category', [ShopController::class, 'category'])->name('category');
 // Route::get('/categories/{slug}', [ShopController::class, 'category'])->name('category');
 
+// Route::get('/login', [ShopController::class, 'login'])->name('login');
+
+// Route::get('/register', [ShopController::class, 'register'])->name('register');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -32,7 +36,16 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    //cart_item
+    Route::get('/cart', [ShopController::class, 'cart'])->name('cart');
     Route::post('/cart', [ShopController::class, 'addToCart'])->name('cart.action');
+    Route::delete('/cart/{id}', [ShopController::class, 'removeFromCart'])->name('cart.remove');
+    // Route::post('/cart/checkout', [ShopController::class, 'checkout'])->name('cart.checkout');
+    Route::post('/cart/{id}/update', [ShopController::class, 'cartUpdate'])->name('cart.update');    
+
+
+    //checkout
+    Route::get('/checkout', [ShopController::class, 'checkout'])->name('checkout');
 });
 
 //Admin route

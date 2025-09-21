@@ -7,7 +7,7 @@
                       <div class="top-bar-item">
                           <i class="bi bi-telephone-fill me-2"></i>
                           <span>Cần giúp? Gọi cho chúng tôi: </span>
-                          <a href="tel:+1234567890">+1 (234) 567-890</a>
+                          <a href="">+84 (234) 567-890</a>
                       </div>
                   </div>
 
@@ -104,7 +104,15 @@
                           </button>
                           <div class="dropdown-menu">
                               <div class="dropdown-header">
-                                  <h6>Welcome to <span class="sitename">FashionStore</span></h6>
+                                  <h6>Hello <span class="sitename">
+                                          @auth
+                                              {{ auth()->user()->name }}
+                                          @endauth
+                                          @guest
+                                              Friend
+                                          @endguest
+                                      </span>
+                                  </h6>
                                   <p class="mb-0">Access account &amp; manage orders</p>
                               </div>
                               <div class="dropdown-body">
@@ -131,8 +139,10 @@
                                       <a href="{{ route('register') }}" class="btn btn-outline-primary w-100">Register</a>
                                   @endguest
                                   @auth
-                                      <form action="{{ route('logout') }}" method="post"></form>
-                                      <button type="submit" class="btn btn-outline-primary w-100">Logout</button>
+                                      <form action="{{ route('logout') }}" method="post">
+                                          @csrf
+                                          <button type="submit" class="btn btn-outline-primary w-100">Logout</button>
+                                      </form>
                                   @endauth
                               </div>
                           </div>
@@ -145,9 +155,9 @@
                       </a>
 
                       <!-- Cart -->
-                      <a href="cart.html" class="header-action-btn">
+                      <a href="{{ route('cart') }}" class="header-action-btn">
                           <i class="bi bi-cart3"></i>
-                          <span class="badge">3</span>
+                          <span class="badge">{{ $cartCount }}</span>
                       </a>
 
                       <!-- Mobile Navigation Toggle -->

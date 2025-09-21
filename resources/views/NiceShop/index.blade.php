@@ -182,7 +182,7 @@
                                 </div>
                                 <div class="product-info">
                                     {{-- <div class="product-category">New Arrivals</div> --}}
-                                    <h4 class="product-name"><a href="product-details.html">{{ $product->name }}</a></h4>
+                                    <h4 class="product-name"><a href="{{ route('product.show', $product->slug) }}">{{ $product->name }}</a></h4>
                                     <div class="product-rating">
                                         <div class="stars">
                                             <i class="bi bi-star-fill"></i>

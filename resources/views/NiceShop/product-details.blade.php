@@ -8,7 +8,7 @@
     <!-- Page Title -->
     <div class="page-title light-background">
         <div class="container d-lg-flex justify-content-between align-items-center">
-            <h1 class="mb-2 mb-lg-0">{{ $product->name }}</h1>
+            <h1 class="mb-2 mb-lg-0">Mua Sản Phẩm</h1>
             <nav class="breadcrumbs">
                 <ol>
                     <li><a href="{{ route('home') }}">Home</a></li>
@@ -113,6 +113,25 @@
                                 </div>
                             </div>
                         @endif
+                        @if (session('error'))
+                            <div class="availability-status" style="border: 1px solid red; background: #fff;">
+                                <div class="stock-indicator" style="background-color: #fff;">
+                                    <i class="bi bi-ban" style="color: red"></i>
+                                    <span class="stock-text">Không thêm được sản phẩm vào giỏ:
+                                        {{ session('error') }}</span>
+                                </div>
+                            </div>
+                        @endif
+
+                        @if (session('success'))
+                            <div class="availability-status">
+                                <div class="stock-indicator">
+                                    <i class="bi bi-check-circle-fill"></i>
+                                    <span class="stock-text">Đã thêm sản phẩm vào giỏ</span>
+                                </div>
+                                {{-- <div class="quantity-left">Đã thêm sản phẩm vào giỏ</div> --}}
+                            </div>
+                        @endif
 
                         <!-- Product Variants -->
                         {{-- <div class="variant-section">
@@ -182,9 +201,9 @@
                                             <form action="{{ route('login') }}" method="post">
                                                 @csrf
                                                 <button class="btn primary-action" type="submit">
-                                                <i class="bi bi-bag-plus"></i>
-                                                Đăng nhập để mua hàng
-                                            </button>
+                                                    <i class="bi bi-bag-plus"></i>
+                                                    Đăng nhập để mua hàng
+                                                </button>
                                             </form>
                                         @endguest
                                     </div>
