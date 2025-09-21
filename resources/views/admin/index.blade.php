@@ -38,14 +38,16 @@
                     <div class="icon purple">
                         <i class="lni lni-cart-full"></i>
                     </div>
-                    <div class="content">
-                        <h6 class="mb-10">New Orders</h6>
-                        <h3 class="text-bold mb-10">34567</h3>
-                        <p class="text-sm text-success">
-                            <i class="lni lni-arrow-up"></i> +2.00%
-                            <span class="text-gray">(30 days)</span>
-                        </p>
-                    </div>
+                    <a href="{{ route('admin.products.index') }}">
+                        <div class="content">
+                            <h6 class="mb-10">Tổng sản phẩm</h6>
+                            <h3 class="text-bold mb-10">{{ $totalProduct }}</h3>
+                            <p class="text-sm text-success">
+                                <i class="lni lni-arrow-up"></i> +2.00%
+                                <span class="text-gray">(30 days)</span>
+                            </p>
+                        </div>
+                    </a>
                 </div>
                 <!-- End Icon Cart -->
             </div>
@@ -55,14 +57,16 @@
                     <div class="icon success">
                         <i class="lni lni-dollar"></i>
                     </div>
-                    <div class="content">
-                        <h6 class="mb-10">Total Income</h6>
-                        <h3 class="text-bold mb-10">$74,567</h3>
-                        <p class="text-sm text-success">
-                            <i class="lni lni-arrow-up"></i> +5.45%
-                            <span class="text-gray">Increased</span>
-                        </p>
-                    </div>
+                    <a href="{{ route('admin.categories.index') }}">
+                        <div class="content">
+                            <h6 class="mb-10">Tổng danh mục</h6>
+                            <h3 class="text-bold mb-10">{{ $totalCategory }}</h3>
+                            <p class="text-sm text-success">
+                                <i class="lni lni-arrow-up"></i> +5.45%
+                                <span class="text-gray">Increased</span>
+                            </p>
+                        </div>
+                    </a>
                 </div>
                 <!-- End Icon Cart -->
             </div>
@@ -72,15 +76,17 @@
                     <div class="icon primary">
                         <i class="lni lni-credit-cards"></i>
                     </div>
-                    <div class="content">
-                        <h6 class="mb-10">Total Expense</h6>
-                        <h3 class="text-bold mb-10">$24,567</h3>
-                        <p class="text-sm text-danger">
-                            <i class="lni lni-arrow-down"></i>
-                            -2.00%
-                            <span class="text-gray">Expense</span>
-                        </p>
-                    </div>
+                    <a href="{{ route('admin.orders.index') }}">
+                        <div class="content">
+                            <h6 class="mb-10">Tổng đơn hàng</h6>
+                            <h3 class="text-bold mb-10">${{ $totalOrder }}</h3>
+                            <p class="text-sm text-danger">
+                                <i class="lni lni-arrow-down"></i>
+                                -2.00%
+                                <span class="text-gray">Expense</span>
+                            </p>
+                        </div>
+                    </a>
                 </div>
                 <!-- End Icon Cart -->
             </div>
@@ -90,15 +96,17 @@
                     <div class="icon orange">
                         <i class="lni lni-user"></i>
                     </div>
-                    <div class="content">
-                        <h6 class="mb-10">Total User</h6>
-                        <h3 class="text-bold mb-10">{{ $totalUser }}</h3>
-                        <p class="text-sm text-danger">
-                            <i class="lni lni-arrow-down"></i>
-                            -25.00%
-                            <span class="text-gray"> Earning</span>
-                        </p>
-                    </div>
+                    <a href="{{ route('admin.users.index') }}">
+                        <div class="content">
+                            <h6 class="mb-10">Tổng khách hàng</h6>
+                            <h3 class="text-bold mb-10">{{ $totalUser }}</h3>
+                            <p class="text-sm text-danger">
+                                <i class="lni lni-arrow-down"></i>
+                                -25.00%
+                                <span class="text-gray"> Earning</span>
+                            </p>
+                        </div>
+                    </a>
                 </div>
                 <!-- End Icon Cart -->
             </div>

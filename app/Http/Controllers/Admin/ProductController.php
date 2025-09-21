@@ -76,7 +76,7 @@ class ProductController extends Controller
                 ProductImage::create([
                     'name' => $imagePath,
                     'product_id' => $product->id,
-                    'url' => Storage::url($imagePath),
+                    'url' => $imagePath,
                 ]);
             }
         }

@@ -18,9 +18,11 @@ Route::get('/', [ShopController::class, 'index'])->name('home');
 
 Route::get('/search-products', [ShopController::class, 'search'])->name('product-search');
 
-Route::get('/product/{slug}', [ShopController::class, 'show'])->name('product.show');
-
 Route::get('/category', [ShopController::class, 'category'])->name('category');
+
+Route::get('/about', [ShopController::class, 'about'])->name('about');
+
+Route::get('/product/{slug}', [ShopController::class, 'show'])->name('product.show');
 // Route::get('/categories/{slug}', [ShopController::class, 'category'])->name('category');
 
 // Route::get('/login', [ShopController::class, 'login'])->name('login');

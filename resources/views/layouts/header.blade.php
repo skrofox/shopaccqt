@@ -174,7 +174,7 @@
               <nav id="navmenu" class="navmenu">
                   <ul>
                       <li><a href="{{ route('home') }}" class="active">Home</a></li>
-                      <li><a href="about.html">About</a></li>
+                      <li><a href="{{ route('about') }}">About</a></li>
                       <li><a href="{{ route('category') }}">Category</a></li>
                       <li><a href="product-details.html">Product Details</a></li>
                       <li><a href="cart.html">Cart</a></li>

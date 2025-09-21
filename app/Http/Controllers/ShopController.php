@@ -149,4 +149,8 @@ class ShopController extends Controller
     {
         return view('NiceShop.checkout');
     }
+
+    public function about(){
+        return view('NiceShop.about');
+    }
 }
