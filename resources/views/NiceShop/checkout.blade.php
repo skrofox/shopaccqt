@@ -37,7 +37,7 @@
                                 <div class="section-content">
                                     <div class="row">
                                         <div class="col-md-12 form-group">
-                                            <label for="first-name">Full Name</label>
+                                            <label for="first-name">Tên Khách Hàng</label>
                                             <input type="text" name="name" class="form-control" id="first-name"
                                                 placeholder="Your First Name" required="" value="{{ Auth::user()->name }}">
                                         </div>
