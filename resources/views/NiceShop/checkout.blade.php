@@ -2,16 +2,14 @@
 
 @section('title', 'Thanh Toán')
 
-
 @section('content')
-
     <!-- Page Title -->
     <div class="page-title light-background">
         <div class="container d-lg-flex justify-content-between align-items-center">
             <h1 class="mb-2 mb-lg-0">Checkout</h1>
             <nav class="breadcrumbs">
                 <ol>
-                    <li><a href="index.html">Home</a></li>
+                    <li><a href="{{ route('home') }}">Home</a></li>
                     <li class="current">Checkout</li>
                 </ol>
             </nav>
@@ -20,42 +18,78 @@
 
     <!-- Checkout Section -->
     <section id="checkout" class="checkout section">
-
         <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+            <!-- Success/Error Messages -->
+            @if (session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            <!-- Validation Errors -->
+            @if ($errors->any())
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <h6><strong>Có lỗi xảy ra:</strong></h6>
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
 
             <div class="row">
                 <div class="col-lg-7">
                     <!-- Checkout Form -->
                     <div class="checkout-container" data-aos="fade-up">
-                        <form class="checkout-form">
+                        <form class="" action="{{ route('checkout.store') }}" method="POST">
+                            @csrf
+
                             <!-- Customer Information -->
                             <div class="checkout-section" id="customer-info">
                                 <div class="section-header">
                                     <div class="section-number">1</div>
-                                    <h3>Customer Information</h3>
+                                    <h3>Thông tin khách hàng</h3>
                                 </div>
                                 <div class="section-content">
                                     <div class="row">
                                         <div class="col-md-12 form-group">
-                                            <label for="first-name">Tên Khách Hàng</label>
-                                            <input type="text" name="name" class="form-control" id="first-name"
-                                                placeholder="Your First Name" required="" value="{{ Auth::user()->name }}">
+                                            <label for="first-name">Tên Khách Hàng <span
+                                                    class="text-danger">*</span></label>
+                                            <input type="text" name="name"
+                                                class="form-control @error('name') is-invalid @enderror" id="first-name"
+                                                placeholder="Nhập tên khách hàng" required
+                                                value="{{ old('name', Auth::user()->name) }}">
+                                            @error('name')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
-                                        {{-- <div class="col-md-6 form-group">
-                                            <label for="last-name">Last Name</label>
-                                            <input type="text" name="last-name" class="form-control" id="last-name"
-                                                placeholder="Your Last Name" required="">
-                                        </div> --}}
                                     </div>
+
                                     <div class="form-group">
                                         <label for="email">Email Address</label>
                                         <input type="email" class="form-control" name="email" id="email"
-                                            placeholder="Your Email" required="" value="{{ Auth::user()->email }}">
+                                            placeholder="Your Email" value="{{ Auth::user()->email }}" disabled>
                                     </div>
+
                                     <div class="form-group">
-                                        <label for="phone">Phone Number</label>
-                                        <input type="tel" class="form-control" name="phone" id="phone"
-                                            placeholder="Your Phone Number" required="">
+                                        <label for="phone">Số điện thoại <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control @error('phone') is-invalid @enderror"
+                                            name="phone" placeholder="Nhập số điện thoại (VD: 0987654321)" required
+                                            value="{{ old('phone') }}" title="Số điện thoại phải có 10-11 chữ số">
+                                        @error('phone')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </div>
                             </div>
@@ -64,60 +98,25 @@
                             <div class="checkout-section" id="shipping-address">
                                 <div class="section-header">
                                     <div class="section-number">2</div>
-                                    <h3>Shipping Address</h3>
+                                    <h3>Địa chỉ giao hàng</h3>
                                 </div>
                                 <div class="section-content">
                                     <div class="form-group">
-                                        <label for="address">Street Address</label>
-                                        <input type="text" class="form-control" name="address" id="address"
-                                            placeholder="Street Address" required="">
+                                        <label for="address">Địa chỉ <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control @error('address') is-invalid @enderror"
+                                            name="address" id="address"
+                                            placeholder="Nhập địa chỉ đầy đủ (số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố)"
+                                            required value="{{ old('address') }}">
+                                        @error('address')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
-                                    <div class="form-group">
-                                        <label for="apartment">Apartment, Suite, etc. (optional)</label>
-                                        <input type="text" class="form-control" name="apartment" id="apartment"
-                                            placeholder="Apartment, Suite, Unit, etc.">
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-4 form-group">
-                                            <label for="city">City</label>
-                                            <input type="text" name="city" class="form-control" id="city"
-                                                placeholder="City" required="">
-                                        </div>
-                                        <div class="col-md-4 form-group">
-                                            <label for="state">State</label>
-                                            <input type="text" name="state" class="form-control" id="state"
-                                                placeholder="State" required="">
-                                        </div>
-                                        <div class="col-md-4 form-group">
-                                            <label for="zip">ZIP Code</label>
-                                            <input type="text" name="zip" class="form-control" id="zip"
-                                                placeholder="ZIP Code" required="">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="country">Country</label>
-                                        <select class="form-select" id="country" name="country" required="">
-                                            <option value="">Select Country</option>
-                                            <option value="US">United States</option>
-                                            <option value="CA">Canada</option>
-                                            <option value="UK">United Kingdom</option>
-                                            <option value="AU">Australia</option>
-                                            <option value="DE">Germany</option>
-                                            <option value="FR">France</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="save-address"
-                                            name="save-address">
-                                        <label class="form-check-label" for="save-address">
-                                            Save this address for future orders
-                                        </label>
-                                    </div>
+
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" id="billing-same"
-                                            name="billing-same" checked="">
+                                            name="save_address" value="1" {{ old('save_address') ? 'checked' : '' }}>
                                         <label class="form-check-label" for="billing-same">
-                                            Billing address same as shipping
+                                            Lưu địa chỉ này cho đơn hàng sau
                                         </label>
                                     </div>
                                 </div>
@@ -127,80 +126,44 @@
                             <div class="checkout-section" id="payment-method">
                                 <div class="section-header">
                                     <div class="section-number">3</div>
-                                    <h3>Payment Method</h3>
+                                    <h3>Phương thức thanh toán</h3>
                                 </div>
                                 <div class="section-content">
                                     <div class="payment-options">
-                                        <div class="payment-option active">
-                                            <input type="radio" name="payment-method" id="credit-card" checked="">
+                                        <div
+                                            class="payment-option {{ old('payment_method', 'cod') == 'cod' ? 'active' : '' }}">
+                                            <input type="radio" name="payment_method" id="credit-card" value="cod"
+                                                {{ old('payment_method', 'cod') == 'cod' ? 'checked' : '' }}>
                                             <label for="credit-card">
                                                 <span class="payment-icon"><i
                                                         class="bi bi-credit-card-2-front"></i></span>
-                                                <span class="payment-label">Credit / Debit Card</span>
+                                                <span class="payment-label">Thanh toán khi nhận hàng (COD)</span>
                                             </label>
                                         </div>
-                                        <div class="payment-option">
-                                            <input type="radio" name="payment-method" id="paypal">
+                                        <div class="payment-option {{ old('payment_method') == 'ck' ? 'active' : '' }}">
+                                            <input type="radio" name="payment_method" id="paypal" value="ck"
+                                                {{ old('payment_method') == 'ck' ? 'checked' : '' }}>
                                             <label for="paypal">
                                                 <span class="payment-icon"><i class="bi bi-paypal"></i></span>
-                                                <span class="payment-label">PayPal</span>
-                                            </label>
-                                        </div>
-                                        <div class="payment-option">
-                                            <input type="radio" name="payment-method" id="apple-pay">
-                                            <label for="apple-pay">
-                                                <span class="payment-icon"><i class="bi bi-apple"></i></span>
-                                                <span class="payment-label">Apple Pay</span>
+                                                <span class="payment-label">Chuyển khoản ngân hàng</span>
                                             </label>
                                         </div>
                                     </div>
+                                    @error('payment_method')
+                                        <div class="text-danger mt-2">{{ $message }}</div>
+                                    @enderror
 
-                                    <div class="payment-details" id="credit-card-details">
-                                        <div class="form-group">
-                                            <label for="card-number">Card Number</label>
-                                            <div class="card-number-wrapper">
-                                                <input type="text" class="form-control" name="card-number"
-                                                    id="card-number" placeholder="1234 5678 9012 3456" required="">
-                                                <div class="card-icons">
-                                                    <i class="bi bi-credit-card-2-front"></i>
-                                                    <i class="bi bi-credit-card"></i>
-                                                </div>
-                                            </div>
+                                    <!-- Thông tin chuyển khoản (hiện khi chọn chuyển khoản) -->
+                                    <div class="payment-details {{ old('payment_method') == 'ck' ? '' : 'd-none' }}"
+                                        id="bank-transfer-details">
+                                        <div class="alert alert-info mt-3">
+                                            <h6><strong>Thông tin chuyển khoản:</strong></h6>
+                                            <p class="mb-1"><strong>Ngân hàng:</strong> Vietcombank</p>
+                                            <p class="mb-1"><strong>Số tài khoản:</strong> 1234567890</p>
+                                            <p class="mb-1"><strong>Chủ tài khoản:</strong> SHOP ABC</p>
+                                            <p class="mb-0"><strong>Nội dung:</strong> Thanh toan don hang [Mã đơn hàng]
+                                            </p>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-md-6 form-group">
-                                                <label for="expiry">Expiration Date</label>
-                                                <input type="text" class="form-control" name="expiry" id="expiry"
-                                                    placeholder="MM/YY" required="">
-                                            </div>
-                                            <div class="col-md-6 form-group">
-                                                <label for="cvv">Security Code (CVV)</label>
-                                                <div class="cvv-wrapper">
-                                                    <input type="text" class="form-control" name="cvv"
-                                                        id="cvv" placeholder="123" required="">
-                                                    <span class="cvv-hint" data-bs-toggle="tooltip"
-                                                        data-bs-placement="top"
-                                                        title="3-digit code on the back of your card">
-                                                        <i class="bi bi-question-circle"></i>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="card-name">Name on Card</label>
-                                            <input type="text" class="form-control" name="card-name" id="card-name"
-                                                placeholder="John Doe" required="">
-                                        </div>
-                                    </div>
-
-                                    <div class="payment-details d-none" id="paypal-details">
-                                        <p class="payment-info">You will be redirected to PayPal to complete your purchase
-                                            securely.</p>
-                                    </div>
-
-                                    <div class="payment-details d-none" id="apple-pay-details">
-                                        <p class="payment-info">You will be prompted to authorize payment with Apple Pay.
-                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -209,25 +172,29 @@
                             <div class="checkout-section" id="order-review">
                                 <div class="section-header">
                                     <div class="section-number">4</div>
-                                    <h3>Review &amp; Place Order</h3>
+                                    <h3>Xác nhận đơn hàng</h3>
                                 </div>
                                 <div class="section-content">
-                                    <div class="form-check terms-check">
-                                        <input class="form-check-input" type="checkbox" id="terms" name="terms"
-                                            required="">
-                                        <label class="form-check-label" for="terms">
-                                            I agree to the <a href="#" data-bs-toggle="modal"
-                                                data-bs-target="#termsModal">Terms and Conditions</a> and <a
-                                                href="#" data-bs-toggle="modal"
-                                                data-bs-target="#privacyModal">Privacy Policy</a>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input @error('agree_terms') is-invalid @enderror"
+                                            type="checkbox" id="agree-terms" name="agree_terms" value="1" required
+                                            {{ old('agree_terms') ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="agree-terms">
+                                            Tôi đồng ý với <a href="#" target="_blank">điều khoản dịch vụ</a> và <a
+                                                href="#" target="_blank">chính sách bảo mật</a> <span
+                                                class="text-danger">*</span>
                                         </label>
+                                        @error('agree_terms')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
-                                    <div class="success-message d-none">Your order has been placed successfully! Thank you
-                                        for your purchase.</div>
+
                                     <div class="place-order-container">
-                                        <button type="submit" class="btn btn-primary place-order-btn">
-                                            <span class="btn-text">Place Order</span>
-                                            <span class="btn-price">$240.96</span>
+                                        <button type="submit" class="btn btn-primary place-order-btn w-100"
+                                            id="place-order-btn">
+                                            <span class="btn-text">Đặt hàng</span>
+                                            <span class="btn-price">{{ number_format($carts->sum('total_price')) }}
+                                                VNĐ</span>
                                         </button>
                                     </div>
                                 </div>
@@ -240,144 +207,151 @@
                     <!-- Order Summary -->
                     <div class="order-summary" data-aos="fade-left" data-aos-delay="200">
                         <div class="order-summary-header">
-                            <h3>Order Summary</h3>
-                            <span class="item-count">2 Items</span>
+                            <h3>Tóm tắt đơn hàng</h3>
+                            <span class="item-count">{{ $carts->count() }} sản phẩm</span>
                         </div>
 
                         <div class="order-summary-content">
                             <div class="order-items">
-                                <div class="order-item">
-                                    <div class="order-item-image">
-                                        <img src="assets/img/product/product-1.webp" alt="Product" class="img-fluid">
-                                    </div>
-                                    <div class="order-item-details">
-                                        <h4>Lorem Ipsum Dolor</h4>
-                                        <p class="order-item-variant">Color: Black | Size: M</p>
-                                        <div class="order-item-price">
-                                            <span class="quantity">1 ×</span>
-                                            <span class="price">$89.99</span>
+                                @foreach ($carts as $cart)
+                                    <div class="order-item">
+                                        <div class="order-item-image">
+                                            @if ($cart->product->images->count() > 0)
+                                                <img src="{{ Storage::url($cart->product->images->first()->name) }}"
+                                                    alt="{{ $cart->product->name }}" class="img-fluid" loading="lazy">
+                                            @else
+                                                <img src="{{ asset('assets/img/default.png') }}"
+                                                    alt="{{ $cart->product->name }}" class="img-fluid" loading="lazy">
+                                            @endif
+                                        </div>
+                                        <div class="order-item-details">
+                                            <h4>{{ $cart->product->name }}</h4>
+                                            <div class="order-item-price">
+                                                <span class="quantity">{{ $cart->quantity }} ×</span>
+                                                <span class="price">{{ number_format($cart->product->price) }} VNĐ</span>
+                                            </div>
+                                            <div class="order-item-total">
+                                                <strong>{{ number_format($cart->total_price) }} VNĐ</strong>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-
-                                <div class="order-item">
-                                    <div class="order-item-image">
-                                        <img src="assets/img/product/product-2.webp" alt="Product" class="img-fluid">
-                                    </div>
-                                    <div class="order-item-details">
-                                        <h4>Sit Amet Consectetur</h4>
-                                        <p class="order-item-variant">Color: White | Size: L</p>
-                                        <div class="order-item-price">
-                                            <span class="quantity">2 ×</span>
-                                            <span class="price">$59.99</span>
-                                        </div>
-                                    </div>
-                                </div>
+                                @endforeach
                             </div>
 
                             <div class="promo-code">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Promo Code"
+                                    <input type="text" class="form-control" placeholder="Mã giảm giá"
                                         aria-label="Promo Code">
-                                    <button class="btn btn-outline-primary" type="button">Apply</button>
+                                    <button class="btn btn-outline-secondary" type="button">Áp dụng</button>
                                 </div>
                             </div>
 
                             <div class="order-totals">
                                 <div class="order-subtotal d-flex justify-content-between">
-                                    <span>Subtotal</span>
-                                    <span>$209.97</span>
+                                    <span>Tạm tính</span>
+                                    <span>{{ number_format($carts->sum('total_price')) }} VNĐ</span>
                                 </div>
                                 <div class="order-shipping d-flex justify-content-between">
-                                    <span>Shipping</span>
-                                    <span>$9.99</span>
+                                    <span>Phí vận chuyển</span>
+                                    <span>Miễn phí</span>
                                 </div>
                                 <div class="order-tax d-flex justify-content-between">
-                                    <span>Tax</span>
-                                    <span>$21.00</span>
+                                    <span>Giảm giá</span>
+                                    <span>0 VNĐ</span>
                                 </div>
+                                <hr>
                                 <div class="order-total d-flex justify-content-between">
-                                    <span>Total</span>
-                                    <span>$240.96</span>
+                                    <strong>Tổng tiền</strong>
+                                    <strong class="summary-value">{{ number_format($carts->sum('total_price')) }}
+                                        VNĐ</strong>
                                 </div>
                             </div>
 
                             <div class="secure-checkout">
                                 <div class="secure-checkout-header">
                                     <i class="bi bi-shield-lock"></i>
-                                    <span>Secure Checkout</span>
+                                    <span>Thanh toán bảo mật</span>
                                 </div>
                                 <div class="payment-icons">
                                     <i class="bi bi-credit-card-2-front"></i>
                                     <i class="bi bi-credit-card"></i>
                                     <i class="bi bi-paypal"></i>
-                                    <i class="bi bi-apple"></i>
+                                    <i class="bi bi-bank"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Terms and Privacy Modals -->
-            <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog modal-dialog-scrollable">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="termsModalLabel">Terms and Conditions</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus
-                                hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus ut eleifend
-                                nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis
-                                nisl tempor.</p>
-                            <p>Suspendisse in orci enim. Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque
-                                eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non
-                                est bibendum non venenatis nisl tempor.</p>
-                            <p>Suspendisse in orci enim. Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque
-                                eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non
-                                est bibendum non venenatis nisl tempor.</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">I Understand</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal fade" id="privacyModal" tabindex="-1" aria-labelledby="privacyModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog modal-dialog-scrollable">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="privacyModalLabel">Privacy Policy</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus
-                                hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus ut eleifend
-                                nibh porttitor. Ut in nulla enim.</p>
-                            <p>Suspendisse in orci enim. Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque
-                                eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non
-                                est bibendum non venenatis nisl tempor.</p>
-                            <p>Suspendisse in orci enim. Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque
-                                eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non
-                                est bibendum non venenatis nisl tempor.</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">I Understand</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
         </div>
-
     </section><!-- /Checkout Section -->
 
+    <!-- JavaScript để xử lý payment method -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const paymentOptions = document.querySelectorAll('input[name="payment_method"]');
+            const bankDetails = document.getElementById('bank-transfer-details');
 
+            paymentOptions.forEach(option => {
+                option.addEventListener('change', function() {
+                    // Remove active class from all options
+                    document.querySelectorAll('.payment-option').forEach(opt => opt.classList
+                        .remove('active'));
+
+                    // Add active class to selected option
+                    this.closest('.payment-option').classList.add('active');
+
+                    // Show/hide bank transfer details
+                    if (this.value === 'ck') {
+                        bankDetails.classList.remove('d-none');
+                    } else {
+                        bankDetails.classList.add('d-none');
+                    }
+                });
+            });
+
+            // Prevent double submission
+            const form = document.querySelector('form');
+            const submitBtn = document.getElementById('place-order-btn');
+
+            form.addEventListener('submit', function() {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML =
+                    '<span class="spinner-border spinner-border-sm me-2"></span>Đang xử lý...';
+            });
+        });
+    </script>
+
+    <style>
+        .is-invalid {
+            border-color: #dc3545;
+        }
+
+        .invalid-feedback {
+            display: block;
+            width: 100%;
+            margin-top: 0.25rem;
+            font-size: 0.875em;
+            color: #dc3545;
+        }
+
+        .payment-option.active {
+            border-color: #0d6efd;
+            background-color: #f8f9fa;
+        }
+
+        .text-danger {
+            color: #dc3545 !important;
+        }
+
+        .order-item-total {
+            margin-top: 5px;
+            font-weight: 500;
+        }
+
+        .spinner-border-sm {
+            width: 1rem;
+            height: 1rem;
+        }
+    </style>
 @endsection

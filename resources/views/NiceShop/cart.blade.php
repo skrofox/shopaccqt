@@ -22,28 +22,27 @@
     <section id="cart" class="cart section">
 
         <div class="container" data-aos="fade-up" data-aos-delay="100">
-
             <div class="row">
                 <div class="col-lg-8" data-aos="fade-up" data-aos-delay="200">
-                    <div class="cart-items">
-                        <div class="cart-header d-none d-lg-block">
-                            <div class="row align-items-center">
-                                <div class="col-lg-6">
-                                    <h5>Sản phẩm</h5>
-                                </div>
-                                <div class="col-lg-2 text-center">
-                                    <h5>Giá</h5>
-                                </div>
-                                <div class="col-lg-2 text-center">
-                                    <h5>Số lượng</h5>
-                                </div>
-                                <div class="col-lg-2 text-center">
-                                    <h5>Tổng tiền</h5>
+                    @foreach ($carts as $cart)
+                        <div class="cart-items">
+                            <div class="cart-header d-none d-lg-block">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-6">
+                                        <h5>Sản phẩm</h5>
+                                    </div>
+                                    <div class="col-lg-2 text-center">
+                                        <h5>Giá</h5>
+                                    </div>
+                                    <div class="col-lg-2 text-center">
+                                        <h5>Số lượng</h5>
+                                    </div>
+                                    <div class="col-lg-2 text-center">
+                                        <h5>Tổng tiền</h5>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        @foreach ($carts as $cart)
                             <div class="cart-item">
                                 <div class="row align-items-center">
                                     <div class="col-lg-6 col-12 mt-3 mt-lg-0 mb-lg-0 mb-3">
@@ -53,8 +52,8 @@
                                                     <img src="{{ Storage::url($cart->product->images->first()->name) }}"
                                                         alt="Product" class="img-fluid" loading="lazy">
                                                 @else
-                                                    <img src="https://via.placeholder.com/150" alt="Product" class="img-fluid"
-                                                        loading="lazy">
+                                                    <img src="{{ asset('assets/img/default.png') }}" alt="Product"
+                                                        class="img-fluid" loading="lazy">
                                                 @endif
                                             </div>
                                             <div class="product-details">
@@ -93,37 +92,38 @@
                                     </div>
                                     <div class="col-lg-2 col-12 mt-3 mt-lg-0 text-center">
                                         <div class="item-total">
-                                            <span id="item-total-{{ $cart->id }}">{{ number_format($cart->total_price) }}</span>
+                                            <span
+                                                id="item-total-{{ $cart->id }}">{{ number_format($cart->total_price) }}</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        @endforeach
 
-                        <div class="cart-actions">
-                            <div class="row">
-                                <div class="col-lg-6 mb-3 mb-lg-0">
-                                    <div class="coupon-form">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" placeholder="Coupon code">
-                                            <button class="btn btn-outline-accent" type="button">Apply
-                                                Coupon</button>
+
+                            <div class="cart-actions">
+                                <div class="row">
+                                    <div class="col-lg-6 mb-3 mb-lg-0">
+                                        <div class="coupon-form">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" placeholder="Coupon code">
+                                                <button class="btn btn-outline-accent" type="button">Apply
+                                                    Coupon</button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-lg-6 text-md-end">
-                                    <button class="btn btn-outline-heading me-2">
-                                        <i class="bi bi-arrow-clockwise"></i> Update Cart
-                                    </button>
-                                    <button class="btn btn-outline-remove">
-                                        <i class="bi bi-trash"></i> Clear Cart
-                                    </button>
+                                    <div class="col-lg-6 text-md-end">
+                                        <button class="btn btn-outline-heading me-2">
+                                            <i class="bi bi-arrow-clockwise"></i> Update Cart
+                                        </button>
+                                        <button class="btn btn-outline-remove">
+                                            <i class="bi bi-trash"></i> Clear Cart
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    @endforeach
                 </div>
-
                 <div class="col-lg-4 mt-4 mt-lg-0" data-aos="fade-up" data-aos-delay="300">
                     <div class="cart-summary">
                         <h4 class="summary-title">Danh sách giỏ hàng</h4>
@@ -200,7 +200,5 @@
         </div>
 
     </section><!-- /Cart Section -->
-    <script>
-
-    </script>
+    <script></script>
 @endsection

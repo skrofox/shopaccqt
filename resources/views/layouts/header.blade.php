@@ -815,9 +815,9 @@
       <!-- Mobile Search Form -->
       <div class="collapse" id="mobileSearch">
           <div class="container">
-              <form class="search-form">
+              <form class="search-form" accept="{{ route('product-search') }}">
                   <div class="input-group">
-                      <input type="text" class="form-control" placeholder="Search for products">
+                      <input type="text" class="form-control" placeholder="Search for products" name="query">
                       <button class="btn" type="submit">
                           <i class="bi bi-search"></i>
                       </button>

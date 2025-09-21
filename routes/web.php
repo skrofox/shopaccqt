@@ -43,11 +43,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/cart', [ShopController::class, 'addToCart'])->name('cart.action');
     Route::delete('/cart/{id}', [ShopController::class, 'removeFromCart'])->name('cart.remove');
     // Route::post('/cart/checkout', [ShopController::class, 'checkout'])->name('cart.checkout');
-    Route::post('/cart/{id}/update', [ShopController::class, 'cartUpdate'])->name('cart.update');    
+    Route::post('/cart/{id}/update', [ShopController::class, 'cartUpdate'])->name('cart.update');
 
 
     //checkout
     Route::get('/checkout', [ShopController::class, 'checkout'])->name('checkout');
+    Route::post('/checkout', [ShopController::class, 'checkoutStore'])->name('checkout.store');
 });
 
 //Admin route

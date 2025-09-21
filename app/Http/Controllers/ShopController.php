@@ -4,10 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\CartItem;
 use App\Models\Category;
+use App\Models\InfoUser;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\Stock;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class ShopController extends Controller
 {
@@ -147,10 +152,193 @@ class ShopController extends Controller
 
     public function checkout()
     {
-        return view('NiceShop.checkout');
+        $carts = CartItem::with(['product.category', 'product.images', 'product.stocks'])
+            ->where('user_id', Auth::id())
+            ->get();
+        return view('NiceShop.checkout', compact('carts'));
     }
 
-    public function about(){
+    public function about()
+    {
         return view('NiceShop.about');
+    }
+
+    // public function checkoutStore(Request $request)
+    // {
+    //     $request->validate([
+    //         'address' => 'required|string|max:255',
+    //         'phone' => 'required|max:10|string',
+    //     ]);
+
+    //     $user_id = Auth::user()->id;
+    //     $carts = CartItem::where('user_id', $user_id)->get();
+    //     $address = $request->input('address');
+    //     $phone = $request->input('phone');
+
+    //     $payment_method = $request->input('payment_method');
+    //     if ($payment_method == 'cod') {
+    //         $payment_method = 'Thanh toán trực tiếp';
+    //     } elseif ($payment_method == 'ck') {
+    //         $payment_method = 'Thanh toán trực tuyến';
+    //     }
+
+    //     foreach ($carts as $item) {
+    //         $order = Order::create([
+    //             'user_id' => $user_id,
+    //             'product_id' => $item->product_id,
+    //             'quantity' => $item->quantity,
+    //             'total_price' => $item->total_price,
+    //             'payment_method' => $payment_method,
+    //         ]);
+    //         $item->delete();
+
+    //         $stocks = Stock::where('product_id', $item->product_id)->first();
+    //         if ($stocks) {
+    //             $stocks->on_hand -= $item->quantity;
+    //             $stocks->save();
+    //         }
+    //     }
+
+
+    //     if (Auth::user()->info->count() == 0) {
+    //         InfoUser::create([
+    //             'user_id' => $user_id,
+    //             'address' => $address,
+    //             'phone' => $phone,
+    //         ]);
+    //     }
+
+    //     return redirect()->route('home')->with('success', 'Thanh toán thành công');
+    // }
+    public function checkoutStore(Request $request)
+    {
+        // Custom validation messages in Vietnamese
+        $messages = [
+            'name.required' => 'Tên khách hàng không được để trống',
+            'name.string' => 'Tên khách hàng phải là chuỗi ký tự',
+            'name.max' => 'Tên khách hàng không được vượt quá 255 ký tự',
+            'address.required' => 'Địa chỉ không được để trống',
+            'address.string' => 'Địa chỉ phải là chuỗi ký tự',
+            'address.max' => 'Địa chỉ không được vượt quá 500 ký tự',
+            'phone.required' => 'Số điện thoại không được để trống',
+            'phone.string' => 'Số điện thoại phải là chuỗi ký tự',
+            'phone.regex' => 'Số điện thoại không đúng định dạng (phải có 10-11 chữ số)',
+            'payment_method.required' => 'Vui lòng chọn phương thức thanh toán',
+            'payment_method.in' => 'Phương thức thanh toán không hợp lệ',
+            'agree_terms.accepted' => 'Bạn phải đồng ý với điều khoản dịch vụ',
+        ];
+
+        // Validate input
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'address' => 'required|string|max:500',
+            'phone' => 'required|string|regex:/^[0-9]{10,11}$/',
+            'payment_method' => 'required|in:cod,ck',
+            'agree_terms' => 'accepted',
+        ], $messages);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Vui lòng kiểm tra lại thông tin đã nhập');
+        }
+
+        try {
+            $user_id = Auth::user()->id;
+            $carts = CartItem::where('user_id', $user_id)->get();
+
+            // Kiểm tra giỏ hàng có rỗng không
+            if ($carts->isEmpty()) {
+                return redirect()->route('cart')->with('error', 'Giỏ hàng của bạn đang trống');
+            }
+
+            // Lấy dữ liệu từ form
+            $name = $request->input('name');
+            $address = $request->input('address');
+            $phone = $request->input('phone');
+            $payment_method = $request->input('payment_method');
+            $save_address = $request->boolean('save_address');
+
+            // Xử lý payment method
+            $payment_method_text = '';
+            switch ($payment_method) {
+                case 'cod':
+                    $payment_method_text = 'Thanh toán khi nhận hàng';
+                    break;
+                case 'ck':
+                    $payment_method_text = 'Chuyển khoản ngân hàng';
+                    break;
+                default:
+                    $payment_method_text = 'Thanh toán khi nhận hàng';
+            }
+
+            // Sử dụng transaction để đảm bảo tính toàn vẹn dữ liệu
+            DB::transaction(function () use ($carts, $user_id, $payment_method_text, $name, $address, $phone, $save_address) {
+                foreach ($carts as $item) {
+                    // Kiểm tra sản phẩm còn tồn tại không
+                    if (!$item->product) {
+                        throw new \Exception("Sản phẩm trong giỏ hàng không còn tồn tại");
+                    }
+
+                    // Kiểm tra tồn kho trước khi tạo đơn hàng
+                    $stock = Stock::where('product_id', $item->product_id)->first();
+                    if ($stock && $stock->on_hand < $item->quantity) {
+                        throw new \Exception("Sản phẩm '{$item->product->name}' chỉ còn {$stock->on_hand} trong kho, không đủ cho số lượng {$item->quantity} bạn yêu cầu");
+                    }
+
+                    // Tạo đơn hàng
+                    $order = Order::create([
+                        'user_id' => $user_id,
+                        'product_id' => $item->product_id,
+                        'quantity' => $item->quantity,
+                        'total_price' => $item->total_price,
+                        'payment_method' => $payment_method_text,
+                        'customer_name' => $name,
+                        'customer_address' => $address,
+                        'customer_phone' => $phone,
+                        'status' => 'pending', // Trạng thái đơn hàng
+                        'order_date' => now(),
+                    ]);
+
+                    // Cập nhật tồn kho
+                    if ($stock) {
+                        $stock->on_hand -= $item->quantity;
+                        $stock->save();
+                    }
+                }
+
+                // Xóa giỏ hàng sau khi tạo đơn hàng thành công
+                CartItem::where('user_id', $user_id)->delete();
+            });
+
+            // Cập nhật hoặc tạo mới thông tin user nếu được yêu cầu
+            if ($save_address) {
+                $userInfo = InfoUser::firstOrNew(['user_id' => $user_id]);
+                $userInfo->address = $address;
+                $userInfo->phone = $phone;
+                $userInfo->save();
+            }
+
+            // Redirect với thông báo thành công
+            $successMessage = 'Đặt hàng thành công! ';
+            if ($payment_method === 'ck') {
+                $successMessage .= 'Vui lòng chuyển khoản theo thông tin đã cung cấp.';
+            } else {
+                $successMessage .= 'Đơn hàng sẽ được giao trong vòng 2-3 ngày làm việc.';
+            }
+
+            return redirect()->route('home')->with('success', $successMessage);
+        } catch (\Exception $e) {
+            // Log lỗi để debug
+            Log::error('Checkout error: ' . $e->getMessage(), [
+                'user_id' => Auth::id(),
+                'request_data' => $request->except(['_token']),
+            ]);
+
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
+        }
     }
 }

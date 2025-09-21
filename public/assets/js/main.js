@@ -552,7 +552,7 @@
         const checkoutSteps = document.querySelectorAll(
             ".checkout-steps .step"
         );
-        const checkoutForms = document.querySelectorAll(".checkout-form");
+        // const checkoutForms = document.querySelectorAll(".checkout-form");
         const nextButtons = document.querySelectorAll(".next-step");
         const prevButtons = document.querySelectorAll(".prev-step");
         const editButtons = document.querySelectorAll(".btn-edit");
@@ -646,7 +646,7 @@
         }
 
         // Form Validation for multi-step checkout
-        const forms = document.querySelectorAll(".checkout-form-element");
+        const forms = document.querySelectorAll(".checkout-form-element");  
         forms.forEach((form) => {
             form.addEventListener("submit", function (e) {
                 //e.preventDefaulṭ();
@@ -665,34 +665,34 @@
                 });
 
                 // If it's the final form and valid, show success message
-                if (isValid && form.closest('.checkout-form[data-form="4"]')) {
-                    // Hide form fields
-                    const formFields = form.querySelectorAll(
-                        ".form-group, .review-sections, .form-check, .d-flex"
-                    );
-                    formFields.forEach((field) => {
-                        field.style.display = "none";
-                    });
+                // if (isValid && form.closest('.checkout-form[data-form="4"]')) {
+                //     // Hide form fields
+                //     const formFields = form.querySelectorAll(
+                //         ".form-group, .review-sections, .form-check, .d-flex"
+                //     );
+                //     formFields.forEach((field) => {
+                //         field.style.display = "none";
+                //     });
 
-                    // Show success message
-                    const successMessage =
-                        form.querySelector(".success-message");
-                    if (successMessage) {
-                        successMessage.classList.remove("d-none");
+                //     // Show success message
+                //     const successMessage =
+                //         form.querySelector(".success-message");
+                //     if (successMessage) {
+                //         successMessage.classList.remove("d-none");
 
-                        // Add animation
-                        successMessage.style.animation =
-                            "fadeInUp 0.5s ease forwards";
-                    }
+                //         // Add animation
+                //         successMessage.style.animation =
+                //             "fadeInUp 0.5s ease forwards";
+                //     }
 
-                    // Simulate redirect after 3 seconds
-                    setTimeout(() => {
-                        // In a real application, this would redirect to an order confirmation page
-                        console.log(
-                            "Redirecting to order confirmation page..."
-                        );
-                    }, 3000);
-                }
+                //     // Simulate redirect after 3 seconds
+                //     setTimeout(() => {
+                //         // In a real application, this would redirect to an order confirmation page
+                //         console.log(
+                //             "Redirecting to order confirmation page..."
+                //         );
+                //     }, 3000);
+                // }
             });
         });
 
@@ -779,97 +779,97 @@
         });
 
         // Form Validation for one-page checkout
-        const checkoutForm = document.querySelector(".checkout-form");
+        // const checkoutForm = document.querySelector(".checkout-form");
 
-        if (checkoutForm) {
-            checkoutForm.addEventListener("submit", function (e) {
-                // e.preventDefault();
+        // if (checkoutForm) {
+        //     checkoutForm.addEventListener("submit", function (e) {
+        //         // e.preventDefault();
 
-                // Basic validation
-                const requiredFields =
-                    checkoutForm.querySelectorAll("[required]");
-                let isValid = true;
+        //         // Basic validation
+        //         const requiredFields =
+        //             checkoutForm.querySelectorAll("[required]");
+        //         let isValid = true;
 
-                requiredFields.forEach((field) => {
-                    if (!field.value.trim()) {
-                        isValid = false;
-                        field.classList.add("is-invalid");
+        //         requiredFields.forEach((field) => {
+        //             if (!field.value.trim()) {
+        //                 isValid = false;
+        //                 field.classList.add("is-invalid");
 
-                        // Scroll to first invalid field
-                        if (isValid === false) {
-                            field.scrollIntoView({
-                                behavior: "smooth",
-                                block: "center",
-                            });
-                            field.focus();
-                            isValid = null; // Set to null so we only scroll to the first invalid field
-                        }
-                    } else {
-                        field.classList.remove("is-invalid");
-                    }
-                });
+        //                 // Scroll to first invalid field
+        //                 if (isValid === false) {
+        //                     field.scrollIntoView({
+        //                         behavior: "smooth",
+        //                         block: "center",
+        //                     });
+        //                     field.focus();
+        //                     isValid = null; // Set to null so we only scroll to the first invalid field
+        //                 }
+        //             } else {
+        //                 field.classList.remove("is-invalid");
+        //             }
+        //         });
 
-                // If form is valid, show success message
-                if (isValid === true) {
-                    // Hide form sections except the last one
-                    const sections =
-                        document.querySelectorAll(".checkout-section");
-                    sections.forEach((section, index) => {
-                        if (index < sections.length - 1) {
-                            section.style.display = "none";
-                        }
-                    });
+        //         // If form is valid, show success message
+        //         if (isValid === true) {
+        //             // Hide form sections except the last one
+        //             const sections =
+        //                 document.querySelectorAll(".checkout-section");
+        //             sections.forEach((section, index) => {
+        //                 if (index < sections.length - 1) {
+        //                     section.style.display = "none";
+        //                 }
+        //             });
 
-                    // Hide terms checkbox and place order button
-                    const termsCheck = document.querySelector(".terms-check");
-                    const placeOrderContainer = document.querySelector(
-                        ".place-order-container"
-                    );
+        //             // Hide terms checkbox and place order button
+        //             const termsCheck = document.querySelector(".terms-check");
+        //             const placeOrderContainer = document.querySelector(
+        //                 ".place-order-container"
+        //             );
 
-                    if (termsCheck) termsCheck.style.display = "none";
-                    if (placeOrderContainer)
-                        placeOrderContainer.style.display = "none";
+        //             if (termsCheck) termsCheck.style.display = "none";
+        //             if (placeOrderContainer)
+        //                 placeOrderContainer.style.display = "none";
 
-                    // Show success message
-                    const successMessage =
-                        document.querySelector(".success-message");
-                    if (successMessage) {
-                        successMessage.classList.remove("d-none");
-                        successMessage.style.animation =
-                            "fadeInUp 0.5s ease forwards";
-                    }
+        //             // Show success message
+        //             const successMessage =
+        //                 document.querySelector(".success-message");
+        //             if (successMessage) {
+        //                 successMessage.classList.remove("d-none");
+        //                 successMessage.style.animation =
+        //                     "fadeInUp 0.5s ease forwards";
+        //             }
 
-                    // Scroll to success message
-                    const orderReview = document.getElementById("order-review");
-                    if (orderReview) {
-                        orderReview.scrollIntoView({
-                            behavior: "smooth",
-                            block: "start",
-                        });
-                    }
+        //             // Scroll to success message
+        //             const orderReview = document.getElementById("order-review");
+        //             if (orderReview) {
+        //                 orderReview.scrollIntoView({
+        //                     behavior: "smooth",
+        //                     block: "start",
+        //                 });
+        //             }
 
-                    // Simulate redirect after 3 seconds
-                    setTimeout(() => {
-                        // In a real application, this would redirect to an order confirmation page
-                        console.log(
-                            "Redirecting to order confirmation page..."
-                        );
-                    }, 3000);
-                }
-            });
+        //             // Simulate redirect after 3 seconds
+        //             setTimeout(() => {
+        //                 // In a real application, this would redirect to an order confirmation page
+        //                 console.log(
+        //                     "Redirecting to order confirmation page..."
+        //                 );
+        //             }, 3000);
+        //         }
+        //     });
 
-            // Add input event listeners to clear validation styling when user types
-            const formInputs = checkoutForm.querySelectorAll(
-                "input, select, textarea"
-            );
-            formInputs.forEach((input) => {
-                input.addEventListener("input", function () {
-                    if (this.value.trim()) {
-                        this.classList.remove("is-invalid");
-                    }
-                });
-            });
-        }
+        //     // Add input event listeners to clear validation styling when user types
+        //     const formInputs = checkoutForm.querySelectorAll(
+        //         "input, select, textarea"
+        //     );
+        //     formInputs.forEach((input) => {
+        //         input.addEventListener("input", function () {
+        //             if (this.value.trim()) {
+        //                 this.classList.remove("is-invalid");
+        //             }
+        //         });
+        //     });
+        // }
     }
 
     // Function to initialize input masks (common for both checkout types)

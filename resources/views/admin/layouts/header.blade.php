@@ -157,7 +157,7 @@
                             <div class="profile-info">
                                 <div class="info">
                                     <div class="image" style="">
-                                        <img src="https://i.pinimg.com/736x/3b/64/f1/3b64f13802cc7ecc3592571c4ef0d632.jpg"
+                                        <img src="https://i.pinimg.com/736x/de/99/f5/de99f59cb3bcd5a35439084666dbddc8.jpg"
                                             alt=""
                                             style="border-radius: 50%;width: 50px; height: 50px; object-fit: cover;" />
                                     </div>
