@@ -173,13 +173,9 @@
           <div class="container-fluid container-xl position-relative">
               <nav id="navmenu" class="navmenu">
                   <ul>
-                      <li><a href="{{ route('home') }}" class="active">Home</a></li>
-                      <li><a href="{{ route('about') }}">About</a></li>
-                      <li><a href="{{ route('category') }}">Category</a></li>
-                      <li><a href="product-details.html">Product Details</a></li>
-                      <li><a href="cart.html">Cart</a></li>
-                      <li><a href="checkout.html">Checkout</a></li>
-                      <li class="dropdown"><a href="#"><span>Dropdown</span> <i
+                      <li><a href="{{ route('home') }}" class="active">Trang chủ</a></li>
+                      <li><a href="{{ route('about') }}">Về chúng tôi</a></li>
+                      <li class="dropdown"><a href="{{ route('category') }}"><span>Danh mục</span> <i
                                   class="bi bi-chevron-down toggle-dropdown"></i></a>
                           <ul>
                               <li><a href="#">Dropdown 1</a></li>
@@ -200,7 +196,7 @@
                       </li>
 
                       <!-- Products Mega Menu 1 -->
-                      <li class="products-megamenu-1"><a href="#"><span>Megamenu 1</span> <i
+                      <li class="products-megamenu-1"><a href="#"><span>Sản phẩm</span> <i
                                   class="bi bi-chevron-down toggle-dropdown"></i></a>
 
                           <!-- Products Mega Menu 1 Mobile View -->
@@ -805,7 +801,7 @@
 
                       </li><!-- End Products Mega Menu 2 -->
 
-                      <li><a href="contact.html">Contact</a></li>
+                      <li><a href="">Liên hệ</a></li>
 
                   </ul>
               </nav>

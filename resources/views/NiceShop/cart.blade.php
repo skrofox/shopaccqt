@@ -60,13 +60,14 @@
                                                 <a href="{{ route('product.show', $cart->product->slug) }}">
                                                     <h6 class="product-title">{{ $cart->product->name }}</h6>
                                                 </a>
-                                                <form action="{{ route('cart.remove', $cart->id) }}" method="post">
+                                                <form action="{{ route('cart.remove', $cart->id) }}" method="post"
+                                                    style="display: inline;">
                                                     @csrf
                                                     @method('DELETE')
                                                     <a href="#0"
                                                         onclick="event.preventDefault(); this.closest('form').submit();"
                                                         class="remove-item">
-                                                        <i class="bi bi-trash"></i> Remove
+                                                        <i class="bi bi-trash"></i> Xóa hàng
                                                     </a>
                                                 </form>
                                             </div>
@@ -78,17 +79,36 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-2 col-12 mt-3 mt-lg-0 text-center">
-                                        <div class="quantity-selector">
-                                            <button class="quantity-btn decrease" data-id="{{ $cart->id }}">
-                                                <i class="bi bi-dash"></i>
-                                            </button>
-                                            <input type="number" class="quantity-input" value="{{ $cart->quantity }}"
-                                                min="{{ $cart->quantity }}" max="{{ $cart->product->stocks->on_hand }}"
-                                                data-id="{{ $cart->id }}">
-                                            <button class="quantity-btn increase" data-id="{{ $cart->id }}">
-                                                <i class="bi bi-plus"></i>
-                                            </button>
-                                        </div>
+                                        <form action="{{ route('cart.update', $cart->id) }}" method="post">
+                                            @csrf
+                                            {{-- <div class="quantity-selector">
+                                                <button class="quantity-btn decrease" type="submit"
+                                                    data-cart-id="{{ $cart->id }}">
+                                                    <i class="bi bi-dash"></i>
+                                                </button>
+                                                <input type="number" class="quantity-input" name="quantity"
+                                                    value="{{ $cart->quantity }}" min="1"
+                                                    max="{{ $cart->product->stocks->on_hand }}"
+                                                    data-cart-id="{{ $cart->id }}">
+                                                <button class="quantity-btn increase" type="submit"
+                                                    data-cart-id="{{ $cart->id }}">
+                                                    <i class="bi bi-plus"></i>
+                                                </button>
+                                            </div> --}}
+                                            <div class="quantity-selector">
+                                                <button type="submit" name="action" value="decrease"
+                                                    class="quantity-btn decrease">
+                                                    <i class="bi bi-dash"></i>
+                                                </button>
+                                                <input type="number" name="quantity" value="{{ $cart->quantity }}"
+                                                    min="1" max="{{ $cart->product->stocks->on_hand }}"
+                                                    class="quantity-input">
+                                                <button type="submit" name="action" value="increase"
+                                                    class="quantity-btn increase">
+                                                    <i class="bi bi-plus"></i>
+                                                </button>
+                                            </div>
+                                        </form>
                                     </div>
                                     <div class="col-lg-2 col-12 mt-3 mt-lg-0 text-center">
                                         <div class="item-total">
@@ -106,17 +126,14 @@
                                         <div class="coupon-form">
                                             <div class="input-group">
                                                 <input type="text" class="form-control" placeholder="Coupon code">
-                                                <button class="btn btn-outline-accent" type="button">Apply
-                                                    Coupon</button>
+                                                <button class="btn btn-outline-accent" type="button">Mã giảm
+                                                    giá</button>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-6 text-md-end">
-                                        <button class="btn btn-outline-heading me-2">
-                                            <i class="bi bi-arrow-clockwise"></i> Update Cart
-                                        </button>
-                                        <button class="btn btn-outline-remove">
-                                            <i class="bi bi-trash"></i> Clear Cart
+                                        <button class="btn btn-outline-heading me-2" type="submit">
+                                            <i class="bi bi-arrow-clockwise"></i> Cập nhật
                                         </button>
                                     </div>
                                 </div>
@@ -132,35 +149,6 @@
                             <span class="summary-label">Tổng tiền sản phẩm</span>
                             <span class="summary-value">{{ number_format($carts->sum('total_price')) }}</span>
                         </div>
-
-                        {{-- <div class="summary-item shipping-item">
-                            <span class="summary-label">Shipping</span>
-                            <div class="shipping-options">
-                                <div class="form-check text-end">
-                                    <input class="form-check-input" type="radio" name="shipping" id="standard" checked="">
-                                    <label class="form-check-label" for="standard">
-                                        Standard Delivery - $4.99
-                                    </label>
-                                </div>
-                                <div class="form-check text-end">
-                                    <input class="form-check-input" type="radio" name="shipping" id="express">
-                                    <label class="form-check-label" for="express">
-                                        Express Delivery - $12.99
-                                    </label>
-                                </div>
-                                <div class="form-check text-end">
-                                    <input class="form-check-input" type="radio" name="shipping" id="free">
-                                    <label class="form-check-label" for="free">
-                                        Free Shipping (Orders over $300)
-                                    </label>
-                                </div>
-                            </div>
-                        </div> --}}
-
-                        {{-- <div class="summary-item">
-                            <span class="summary-label">Tax</span>
-                            <span class="summary-value">$27.00</span>
-                        </div> --}}
 
                         <div class="summary-item discount">
                             <span class="summary-label">Giảm giá</span>
@@ -196,9 +184,59 @@
                     </div>
                 </div>
             </div>
-
         </div>
 
-    </section><!-- /Cart Section -->
-    <script></script>
+    </section>
+    {{-- <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Xử lý nút tăng số lượng
+            document.querySelectorAll('.quantity-btn.increase').forEach(button => {
+                button.addEventListener('click', function() {
+                    const cartId = this.getAttribute('data-cart-id');
+                    const input = document.querySelector(`.quantity-input[data-cart-id="${cartId}"]`);
+                    const currentValue = parseInt(input.value);
+                    const maxValue = parseInt(input.getAttribute('max'));
+
+                    if (currentValue < maxValue) {
+                        input.value = currentValue + 1;
+                    } else {
+                        alert('Đã đạt số lượng tối đa trong kho!');
+                    }
+                });
+            });
+
+            // Xử lý nút giảm số lượng
+            document.querySelectorAll('.quantity-btn.decrease').forEach(button => {
+                button.addEventListener('click', function() {
+                    const cartId = this.getAttribute('data-cart-id');
+                    const input = document.querySelector(`.quantity-input[data-cart-id="${cartId}"]`);
+                    const currentValue = parseInt(input.value);
+                    const minValue = parseInt(input.getAttribute('min'));
+
+                    if (currentValue > minValue) {
+                        input.value = currentValue - 1;
+                    } else {
+                        alert('Số lượng tối thiểu là ' + minValue);
+                    }
+                });
+            });
+
+            // Validate khi nhập trực tiếp
+            document.querySelectorAll('.quantity-input').forEach(input => {
+                input.addEventListener('change', function() {
+                    let quantity = parseInt(this.value);
+                    const minValue = parseInt(this.getAttribute('min'));
+                    const maxValue = parseInt(this.getAttribute('max'));
+
+                    if (isNaN(quantity) || quantity < minValue) {
+                        this.value = minValue;
+                        alert('Số lượng tối thiểu là ' + minValue);
+                    } else if (quantity > maxValue) {
+                        this.value = maxValue;
+                        alert('Số lượng tối đa là ' + maxValue);
+                    }
+                });
+            });
+        });
+    </script> --}}
 @endsection
