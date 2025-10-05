@@ -19,7 +19,6 @@ class OrderController extends Controller
             ->with('product')
             ->get();
 
-        // $product_might = Product::where('category_id', $order)
 
         if ($orders->isEmpty()) {
             return redirect()->route('cart')->with('error', 'Không tìm thấy đơn hàng này');

@@ -25,71 +25,72 @@
                         <tr>
                             <th>#</th>
                             <th>IDKH</th>
-                            <th>Tên sản phẩm</th>
+                            <th>Mã đơn hàng</th>
                             <th>Phương thức thanh toán</th>
                             <th>Thanh toán</th>
                             <th>Số Lượng</th>
                             <th>Tổng Tiền</th>
                             <th>Trạng thái</th>
-                            <th>Note</th>
+                            {{-- <th>Note</th> --}}
                             <th class="text-end">Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($orders as $order)
+                        @foreach ($orders as $order)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $order->user_id }}</td>
-                                <td>{{ $order->product->name }}</td>
-                                <td>{{ $order->payment_method }}</td>
+                                <td>{{ $order->first()->user_id }}</td>
+                                <td>#{{ $order->first()->order_code }}</td>
+                                <td>{{ $order->first()->payment_method }}</td>
                                 <td>
-                                    @if ($order->payment_status == 'paid')
+                                    @if ($order->first()->payment_status == 'paid')
                                         <span class="status-btn success-btn">Đã</span>
                                     @else
                                         <span class="status-btn close-btn">Chưa</span>
                                     @endif
                                 </td>
-                                <td>{{ $order->quantity }}</td>
-                                <td>{{ number_format($order->total_price) }}</td>
+                                <td>{{ $order->sum('quantity') }}</td>
+                                <td>{{ number_format($order->sum('total_price')) }}</td>
                                 <td>
-                                    <form action="{{ route('admin.orders.updateStatus', $order->id) }}" method="POST">
+                                    <form action="{{ route('admin.orders.updateStatus', $order->first()->order_code) }}"
+                                        method="POST">
                                         @csrf
                                         @method('PUT')
                                         <select name="status" class="form-select form-select-sm"
                                             onchange="this.form.submit()">
-                                            <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Đang
+                                            <option value="pending"
+                                                {{ $order->first()->status == 'pending' ? 'selected' : '' }}>Đang
                                                 xử lý</option>
-                                            <option value="processing" {{ $order->status == 'processing' ? 'selected' : '' }}>
+                                            <option value="processing"
+                                                {{ $order->first()->status == 'processing' ? 'selected' : '' }}>
                                                 Đang giao</option>
                                             <option value="cancelled"
-                                                {{ $order->status == 'cancelled' ? 'selected' : '' }}>Hủy đơn</option>
+                                                {{ $order->first()->status == 'cancelled' ? 'selected' : '' }}>Hủy đơn
+                                            </option>
                                         </select>
                                     </form>
                                 </td>
 
-                                <td class="text-truncate" style="max-width: 50px" title="{{ $order->note }}">
-                                    {{ $order->note }}</td>
+                                {{-- <td class="text-truncate" style="max-width: 50px" title="{{ $order->note }}">
+                                    {{ $order->note }}</td> --}}
                                 <td class="text-end">
-                                    <a href="" class="btn btn-sm btn-primary">Xem</a>
-                                    <form action="{{ route('admin.orders.destroy', $order->id) }}" method="POST"
-                                        style="display:inline-block" onsubmit="return confirm('Xóa danh mục này?');">
+                                    <a href="{{ route('admin.orders.show', $order->first()->order_code) }}" class="btn btn-sm btn-primary">Xem</a>
+                                    <form action="{{ route('admin.orders.destroy', $order->first()->order_code) }}"
+                                        method="POST" style="display:inline-block"
+                                        onsubmit="return confirm('Xóa danh mục này?');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
                                     </form>
                                 </td>
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="6" class="text-center">Chưa có danh mục</td>
-                            </tr>
-                        @endforelse
+                        @endforeach
                     </tbody>
                 </table>
             </div>
-            <div class="mt-3">
+            {{-- <div class="mt-3">
                 {{ $orders->links() }}
-            </div>
+            </div> --}}
         </div>
     </div>
 @endsection

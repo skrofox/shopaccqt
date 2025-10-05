@@ -14,7 +14,7 @@ class OrderController extends Controller
     public function index()
     {
         //
-        $orders = Order::paginate(10);
+        $orders = Order::paginate(20)->groupBy('order_code');
         return view('admin.orders.index', compact('orders'));
     }
 
@@ -37,10 +37,11 @@ class OrderController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $order_code)
     {
-        $order = Order::with(['user', 'cartItems.product'])->findOrFail($id);
-        return view('admin.orders.show', compact('order'));
+        $orders = Order::where('order_code', $order_code)->get();
+        $orderInfo = $orders->first();
+        return view('admin.orders.show', compact('orders', 'orderInfo'));
     }
 
     /**
@@ -62,17 +63,28 @@ class OrderController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $order_code)
     {
-        //
+        $order = Order::where('order_code', $order_code);
+
+        if ($order) {
+            // Order::where('order_code', $order_code)->delete();
+            $order->delete();
+        }
+
+        return back()->with('success', 'Xoa don hang thanh cong');
     }
 
-    public function updateStatus($id)
+    public function updateStatus($order_code)
     {
-        $order = Order::find($id);
-        $order->status = request('status');
-        $order->save();
+        $order = Order::where('order_code', $order_code);
 
-        return redirect()->route('admin.orders.index')->with('success', 'Cap nhat trang thai thanh cong ' . "ID: $id");
+        if ($order) {
+            $order->update([
+                'status' => request('status'),
+            ]);
+        }
+
+        return back()->with('success', 'Cap nhat trang thai thanh cong ' . "Ma Don: $order_code");
     }
 }

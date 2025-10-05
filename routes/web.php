@@ -110,9 +110,9 @@ Route::middleware(['is_admin'])->prefix('/admin')->name('admin.')->group(functio
     //Route order (no soft delete)
     Route::prefix('/order')->name('orders.')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
-        Route::get('/{id}', [OrderController::class, 'show'])->name('show');
-        Route::delete('/{id}', [OrderController::class, 'destroy'])->name('destroy');
-        Route::put('/{id}', [OrderController::class, 'updateStatus'])->name('updateStatus');
+        Route::get('/{order_code}', [OrderController::class, 'show'])->name('show');
+        Route::delete('/{order_code}', [OrderController::class, 'destroy'])->name('destroy');
+        Route::put('/{order_code}', [OrderController::class, 'updateStatus'])->name('updateStatus');
         // Route::put('/{id}', [OrderController::class, 'update'])->name('update');
     });
 
