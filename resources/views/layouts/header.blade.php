@@ -116,32 +116,32 @@
                                   <p class="mb-0">Access account &amp; manage orders</p>
                               </div>
                               <div class="dropdown-body">
-                                  <a class="dropdown-item d-flex align-items-center" href="account.html">
+                                  <a class="dropdown-item d-flex align-items-center" href="{{ route('account') }}">
                                       <i class="bi bi-person-circle me-2"></i>
-                                      <span>My Profile</span>
+                                      <span>Hồ Sơ</span>
                                   </a>
-                                  <a class="dropdown-item d-flex align-items-center" href="account.html">
+                                  <a class="dropdown-item d-flex align-items-center" href="{{ route('account') }}">
                                       <i class="bi bi-bag-check me-2"></i>
-                                      <span>My Orders</span>
+                                      <span>Đơn hàng</span>
                                   </a>
-                                  <a class="dropdown-item d-flex align-items-center" href="account.html">
+                                  {{-- <a class="dropdown-item d-flex align-items-center" href="account.html">
                                       <i class="bi bi-heart me-2"></i>
-                                      <span>My Wishlist</span>
-                                  </a>
-                                  <a class="dropdown-item d-flex align-items-center" href="account.html">
+                                      <span>Yêu thích</span>
+                                  </a> --}}
+                                  <a class="dropdown-item d-flex align-items-center" href="#">
                                       <i class="bi bi-gear me-2"></i>
-                                      <span>Settings</span>
+                                      <span>Cài đặt</span>
                                   </a>
                               </div>
                               <div class="dropdown-footer">
                                   @guest
-                                      <a href="{{ route('login') }}" class="btn btn-primary w-100 mb-2">Sign In</a>
-                                      <a href="{{ route('register') }}" class="btn btn-outline-primary w-100">Register</a>
+                                      <a href="{{ route('login') }}" class="btn btn-primary w-100 mb-2">Đăng nhập</a>
+                                      <a href="{{ route('register') }}" class="btn btn-outline-primary w-100">Đăng ký</a>
                                   @endguest
                                   @auth
                                       <form action="{{ route('logout') }}" method="post">
                                           @csrf
-                                          <button type="submit" class="btn btn-outline-primary w-100">Logout</button>
+                                          <button type="submit" class="btn btn-outline-primary w-100">Đăng xuất</button>
                                       </form>
                                   @endauth
                               </div>
@@ -149,10 +149,10 @@
                       </div>
 
                       <!-- Wishlist -->
-                      <a href="account.html" class="header-action-btn d-none d-md-block">
+                      {{-- <a href="account.html" class="header-action-btn d-none d-md-block">
                           <i class="bi bi-heart"></i>
                           <span class="badge">0</span>
-                      </a>
+                      </a> --}}
 
                       <!-- Cart -->
                       <a href="{{ route('cart') }}" class="header-action-btn">
@@ -178,8 +178,16 @@
                       <li class="dropdown"><a href="{{ route('category') }}"><span>Danh mục</span> <i
                                   class="bi bi-chevron-down toggle-dropdown"></i></a>
                           <ul>
-                              <li><a href="#">Dropdown 1</a></li>
-                              <li class="dropdown"><a href="#"><span>Deep Dropdown</span> <i
+                              @if ($categories)
+                                  @foreach ($categories as $category)
+                                      <li><a
+                                              href="{{ route('category', ['query' => $category->slug]) }}">{{ $category->name }}</a>
+                                      </li>
+                                  @endforeach
+                              @else
+                                  <p>Không có danh mục</p>
+                              @endif
+                              {{-- <li class="dropdown"><a href="#"><span>Deep Dropdown</span> <i
                                           class="bi bi-chevron-down toggle-dropdown"></i></a>
                                   <ul>
                                       <li><a href="#">Deep Dropdown 1</a></li>
@@ -188,10 +196,10 @@
                                       <li><a href="#">Deep Dropdown 4</a></li>
                                       <li><a href="#">Deep Dropdown 5</a></li>
                                   </ul>
-                              </li>
-                              <li><a href="#">Dropdown 2</a></li>
+                              </li> --}}
+                              {{-- <li><a href="#">Dropdown 2</a></li>
                               <li><a href="#">Dropdown 3</a></li>
-                              <li><a href="#">Dropdown 4</a></li>
+                              <li><a href="#">Dropdown 4</a></li> --}}
                           </ul>
                       </li>
 
@@ -260,22 +268,26 @@
                                       <li class="nav-item" role="presentation">
                                           <button class="nav-link active" id="featured-tab" data-bs-toggle="tab"
                                               data-bs-target="#featured-content-1862" type="button"
-                                              aria-selected="true" role="tab">Featured</button>
+                                              aria-selected="true" role="tab">
+                                              Đặc trưng
+                                          </button>
                                       </li>
                                       <li class="nav-item" role="presentation">
                                           <button class="nav-link" id="new-tab" data-bs-toggle="tab"
                                               data-bs-target="#new-content-1862" type="button" aria-selected="false"
-                                              tabindex="-1" role="tab">New Arrivals</button>
+                                              tabindex="-1" role="tab">
+                                              Mới đến
+                                          </button>
                                       </li>
-                                      <li class="nav-item" role="presentation">
+                                      {{-- <li class="nav-item" role="presentation">
                                           <button class="nav-link" id="sale-tab" data-bs-toggle="tab"
                                               data-bs-target="#sale-content-1862" type="button"
                                               aria-selected="false" tabindex="-1" role="tab">Sale</button>
-                                      </li>
+                                      </li> --}}
                                       <li class="nav-item" role="presentation">
                                           <button class="nav-link" id="category-tab" data-bs-toggle="tab"
                                               data-bs-target="#category-content-1862" type="button"
-                                              aria-selected="false" tabindex="-1" role="tab">Categories</button>
+                                              aria-selected="false" tabindex="-1" role="tab">Danh mục</button>
                                       </li>
                                   </ul>
                               </div>
@@ -287,50 +299,25 @@
                                   <div class="tab-pane fade show active" id="featured-content-1862" role="tabpanel"
                                       aria-labelledby="featured-tab">
                                       <div class="product-grid">
-                                          <div class="product-card">
-                                              <div class="product-image">
-                                                  <img src="assets/img/product/product-1.webp" alt="Featured Product"
-                                                      loading="lazy">
+                                          @foreach ($newFeatures as $item)
+                                              <div class="product-card">
+                                                  <div class="product-image">
+                                                      @if ($item->images->count() > 0)
+                                                          <img src="{{ Storage::url($item->images->first()->name) }}"
+                                                              alt="Featured Product" loading="lazy">
+                                                      @else
+                                                          <img src="{{ asset('assets/img/default.png') }}"
+                                                              alt="Featured Product" class="img-fluid">
+                                                      @endif
+                                                  </div>
+                                                  <div class="product-info">
+                                                      <h5>{{ $item->name }}</h5>
+                                                      <p class="price">{{ number_format($item->price) }}</p>
+                                                      <a href="{{ route('product.show', $item->slug) }}"
+                                                          class="btn-view">View Product</a>
+                                                  </div>
                                               </div>
-                                              <div class="product-info">
-                                                  <h5>Premium Headphones</h5>
-                                                  <p class="price">$129.99</p>
-                                                  <a href="#" class="btn-view">View Product</a>
-                                              </div>
-                                          </div>
-                                          <div class="product-card">
-                                              <div class="product-image">
-                                                  <img src="assets/img/product/product-2.webp" alt="Featured Product"
-                                                      loading="lazy">
-                                              </div>
-                                              <div class="product-info">
-                                                  <h5>Smart Watch</h5>
-                                                  <p class="price">$199.99</p>
-                                                  <a href="#" class="btn-view">View Product</a>
-                                              </div>
-                                          </div>
-                                          <div class="product-card">
-                                              <div class="product-image">
-                                                  <img src="assets/img/product/product-3.webp" alt="Featured Product"
-                                                      loading="lazy">
-                                              </div>
-                                              <div class="product-info">
-                                                  <h5>Wireless Earbuds</h5>
-                                                  <p class="price">$89.99</p>
-                                                  <a href="#" class="btn-view">View Product</a>
-                                              </div>
-                                          </div>
-                                          <div class="product-card">
-                                              <div class="product-image">
-                                                  <img src="assets/img/product/product-4.webp" alt="Featured Product"
-                                                      loading="lazy">
-                                              </div>
-                                              <div class="product-info">
-                                                  <h5>Bluetooth Speaker</h5>
-                                                  <p class="price">$79.99</p>
-                                                  <a href="#" class="btn-view">View Product</a>
-                                              </div>
-                                          </div>
+                                          @endforeach
                                       </div>
                                   </div>
 
@@ -338,59 +325,32 @@
                                   <div class="tab-pane fade" id="new-content-1862" role="tabpanel"
                                       aria-labelledby="new-tab">
                                       <div class="product-grid">
-                                          <div class="product-card">
-                                              <div class="product-image">
-                                                  <img src="assets/img/product/product-5.webp" alt="New Arrival"
-                                                      loading="lazy">
-                                                  <span class="badge-new">New</span>
+                                          @foreach ($newFeatures as $item)
+                                              <div class="product-card">
+                                                  <div class="product-image">
+                                                      @if ($item->images->count() > 0)
+                                                          <img src="{{ Storage::url($item->images->first()->name) }}"
+                                                              alt="New Arrival" loading="lazy">
+                                                          <span class="badge-new">New</span>
+                                                      @else
+                                                          <img src="{{ asset('assets/img/default.png') }}"
+                                                              alt="New Arrival" class="img-fluid">
+                                                          <span class="badge-new">New</span>
+                                                      @endif
+                                                  </div>
+                                                  <div class="product-info">
+                                                      <h5>{{ $item->name }}</h5>
+                                                      <p class="price">{{ number_format($item->price) }}</p>
+                                                      <a href="{{ route('product.show', $item->slug) }}"
+                                                          class="btn-view">View Product</a>
+                                                  </div>
                                               </div>
-                                              <div class="product-info">
-                                                  <h5>Fitness Tracker</h5>
-                                                  <p class="price">$69.99</p>
-                                                  <a href="#" class="btn-view">View Product</a>
-                                              </div>
-                                          </div>
-                                          <div class="product-card">
-                                              <div class="product-image">
-                                                  <img src="assets/img/product/product-6.webp" alt="New Arrival"
-                                                      loading="lazy">
-                                                  <span class="badge-new">New</span>
-                                              </div>
-                                              <div class="product-info">
-                                                  <h5>Wireless Charger</h5>
-                                                  <p class="price">$39.99</p>
-                                                  <a href="#" class="btn-view">View Product</a>
-                                              </div>
-                                          </div>
-                                          <div class="product-card">
-                                              <div class="product-image">
-                                                  <img src="assets/img/product/product-7.webp" alt="New Arrival"
-                                                      loading="lazy">
-                                                  <span class="badge-new">New</span>
-                                              </div>
-                                              <div class="product-info">
-                                                  <h5>Smart Bulb Set</h5>
-                                                  <p class="price">$49.99</p>
-                                                  <a href="#" class="btn-view">View Product</a>
-                                              </div>
-                                          </div>
-                                          <div class="product-card">
-                                              <div class="product-image">
-                                                  <img src="assets/img/product/product-8.webp" alt="New Arrival"
-                                                      loading="lazy">
-                                                  <span class="badge-new">New</span>
-                                              </div>
-                                              <div class="product-info">
-                                                  <h5>Portable Power Bank</h5>
-                                                  <p class="price">$59.99</p>
-                                                  <a href="#" class="btn-view">View Product</a>
-                                              </div>
-                                          </div>
+                                          @endforeach
                                       </div>
                                   </div>
 
                                   <!-- Sale Tab -->
-                                  <div class="tab-pane fade" id="sale-content-1862" role="tabpanel"
+                                  {{-- <div class="tab-pane fade" id="sale-content-1862" role="tabpanel"
                                       aria-labelledby="sale-tab">
                                       <div class="product-grid">
                                           <div class="product-card">
@@ -446,23 +406,25 @@
                                               </div>
                                           </div>
                                       </div>
-                                  </div>
+                                  </div> --}}
 
                                   <!-- Categories Tab -->
                                   <div class="tab-pane fade" id="category-content-1862" role="tabpanel"
                                       aria-labelledby="category-tab">
                                       <div class="category-grid">
                                           <div class="category-column">
-                                              <h4>Clothing</h4>
+                                              <h4>Danh mục</h4>
                                               <ul>
-                                                  <li><a href="#">Men's Wear</a></li>
-                                                  <li><a href="#">Women's Wear</a></li>
-                                                  <li><a href="#">Kids Collection</a></li>
-                                                  <li><a href="#">Sportswear</a></li>
-                                                  <li><a href="#">Accessories</a></li>
+                                                  @if ($categories)
+                                                      @foreach ($categories as $category)
+                                                          <li><a
+                                                                  href="{{ route('category', ['query' => $category->slug]) }}">{{ $category->name }}</a>
+                                                          </li>
+                                                      @endforeach
+                                                  @endif
                                               </ul>
                                           </div>
-                                          <div class="category-column">
+                                          {{-- <div class="category-column">
                                               <h4>Electronics</h4>
                                               <ul>
                                                   <li><a href="#">Smartphones</a></li>
@@ -491,7 +453,7 @@
                                                   <li><a href="#">Fragrances</a></li>
                                                   <li><a href="#">Personal Care</a></li>
                                               </ul>
-                                          </div>
+                                          </div> --}}
                                       </div>
                                   </div>
 
@@ -501,7 +463,7 @@
 
                       </li><!-- End Products Mega Menu 1 -->
                       <!-- Products Mega Menu 2 -->
-                      <li class="products-megamenu-2"><a href="#"><span>Megamenu 2</span> <i
+                      {{-- <li class="products-megamenu-2"><a href="#"><span>Megamenu 2</span> <i
                                   class="bi bi-chevron-down toggle-dropdown"></i></a>
 
                           <!-- Products Mega Menu 2 Mobile View -->
@@ -799,9 +761,10 @@
 
                           </div><!-- End Products Mega Menu 2 Desktop View -->
 
-                      </li><!-- End Products Mega Menu 2 -->
+                      </li> --}}
+                      <!-- End Products Mega Menu 2 -->
 
-                      <li><a href="">Liên hệ</a></li>
+                      <li><a href="{{ route('contact') }}">Liên hệ</a></li>
 
                   </ul>
               </nav>

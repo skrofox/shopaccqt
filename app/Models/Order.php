@@ -10,7 +10,15 @@ class Order extends Model
     protected $table = 'orders';
 
     protected $fillable = [
-        'user_id', 'product_id', 'quantity', 'payment_method', 'payment_status', 'total_price', 'status', 'note'
+        'user_id',
+        'product_id',
+        'quantity',
+        'payment_method',
+        'payment_status',
+        'total_price',
+        'status',
+        // 'note',
+        'order_code'
     ];
 
     public function product()
@@ -22,6 +30,4 @@ class Order extends Model
     {
         return $this->belongsTo(User::class);
     }
-
-    
 }

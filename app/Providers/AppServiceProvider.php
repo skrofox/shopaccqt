@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Models\CartItem;
+use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
@@ -25,15 +27,16 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         View::composer('layouts.header', function ($view) {
-            // $cart = Session::get('cart', []);
             $cartCount = 0;
+            $categories = Category::all();
+            $newFeatures = Product::orderByDesc('created_at')->take(4)->get();
 
             if (Auth::check()) {
                 $cartCount = CartItem::where('user_id', Auth::user()->id)->count();
                 // $user = Auth::user();
             }
 
-            $view->with('cartCount', $cartCount);
+            $view->with('cartCount', $cartCount)->with('categories', $categories)->with('newFeatures', $newFeatures);
         });
     }
 }

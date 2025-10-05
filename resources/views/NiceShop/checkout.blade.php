@@ -56,71 +56,81 @@
                             @csrf
 
                             <!-- Customer Information -->
-                            <div class="checkout-section" id="customer-info">
-                                <div class="section-header">
-                                    <div class="section-number">1</div>
-                                    <h3>Thông tin khách hàng</h3>
-                                </div>
-                                <div class="section-content">
-                                    <div class="row">
-                                        <div class="col-md-12 form-group">
-                                            <label for="first-name">Tên Khách Hàng <span
-                                                    class="text-danger">*</span></label>
-                                            <input type="text" name="name"
-                                                class="form-control @error('name') is-invalid @enderror" id="first-name"
-                                                placeholder="Nhập tên khách hàng" required
-                                                value="{{ old('name', Auth::user()->name) }}">
-                                            @error('name')
+                            @foreach ($user->infos as $info)
+                                <div class="checkout-section" id="customer-info">
+                                    <div class="section-header">
+                                        <div class="section-number">1</div>
+                                        <h3>Thông tin khách hàng</h3>
+                                    </div>
+                                    <div class="section-content">
+                                        <div class="row">
+                                            <div class="col-md-12 form-group">
+                                                <label for="first-name">Tên Khách Hàng <span
+                                                        class="text-danger">*</span></label>
+                                                <input type="text" name="name"
+                                                    class="form-control @error('name') is-invalid @enderror" id="first-name"
+                                                    placeholder="Nhập tên khách hàng" required
+                                                    value="{{ old('name', Auth::user()->name) }}">
+                                                @error('name')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="email">Email Address</label>
+                                            <input type="email" class="form-control" name="email" id="email"
+                                                placeholder="Your Email" value="{{ Auth::user()->email }}" disabled>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="phone">Số điện thoại <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control @error('phone') is-invalid @enderror"
+                                                name="phone" placeholder="Nhập số điện thoại (VD: 0987654321)" required
+                                                value="{{ old('phone', $info->phone) }}"
+                                                title="Số điện thoại phải có 10-11 chữ số">
+                                            @error('phone')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div class="form-group">
-                                        <label for="email">Email Address</label>
-                                        <input type="email" class="form-control" name="email" id="email"
-                                            placeholder="Your Email" value="{{ Auth::user()->email }}" disabled>
+                                <!-- Shipping Address -->
+                                <div class="checkout-section" id="shipping-address">
+                                    <div class="section-header">
+                                        <div class="section-number">2</div>
+                                        <h3>Địa chỉ giao hàng</h3>
                                     </div>
+                                    <div class="section-content">
+                                        <div class="form-group">
+                                            <label for="address">Địa chỉ <span class="text-danger">*</span></label>
+                                            <input type="text"
+                                                class="form-control @error('address') is-invalid @enderror" name="address"
+                                                id="address"
+                                                placeholder="Nhập địa chỉ đầy đủ (số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố)"
+                                                required value="{{ old('address', $info->address) }}">
+                                            @error('address')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                            <select name="choose_address" >
+                                                <option value="0">Chọn địa chỉ có sẵn</option>
+                                                <option value="">{{$info->address . ' - ' . $info->phone}}</option>
+                                            </select>
+                                        </div>
 
-                                    <div class="form-group">
-                                        <label for="phone">Số điện thoại <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control @error('phone') is-invalid @enderror"
-                                            name="phone" placeholder="Nhập số điện thoại (VD: 0987654321)" required
-                                            value="{{ old('phone') }}" title="Số điện thoại phải có 10-11 chữ số">
-                                        @error('phone')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="billing-same"
+                                                name="save_address" value="1"
+                                                {{ old('save_address') ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="billing-same">
+                                                Lưu địa chỉ này cho đơn hàng sau
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            @endforeach
 
-                            <!-- Shipping Address -->
-                            <div class="checkout-section" id="shipping-address">
-                                <div class="section-header">
-                                    <div class="section-number">2</div>
-                                    <h3>Địa chỉ giao hàng</h3>
-                                </div>
-                                <div class="section-content">
-                                    <div class="form-group">
-                                        <label for="address">Địa chỉ <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control @error('address') is-invalid @enderror"
-                                            name="address" id="address"
-                                            placeholder="Nhập địa chỉ đầy đủ (số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố)"
-                                            required value="{{ old('address') }}">
-                                        @error('address')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="billing-same"
-                                            name="save_address" value="1" {{ old('save_address') ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="billing-same">
-                                            Lưu địa chỉ này cho đơn hàng sau
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
 
                             <!-- Payment Method -->
                             <div class="checkout-section" id="payment-method">

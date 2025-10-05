@@ -47,8 +47,8 @@ class User extends Authenticatable
         ];
     }
 
-    public function info()
+    public function infos()
     {
-        return $this->hasMany(InfoUser::class);
+        return $this->hasMany(InfoUser::class, 'user_id', 'id');
     }
 }

@@ -10,23 +10,17 @@ use App\Http\Controllers\ShopController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-// Route::get('/', function () {
-//     return view('NiceShop.index');
-// })->name('home');
-
+//home route
 Route::get('/', [ShopController::class, 'index'])->name('home');
 
+//
 Route::get('/search-products', [ShopController::class, 'search'])->name('product-search');
-
-Route::get('/category', [ShopController::class, 'category'])->name('category');
-
+Route::get('/category', [\App\Http\Controllers\CategoryController::class, 'category'])->name('category');
 Route::get('/about', [ShopController::class, 'about'])->name('about');
-
+Route::get('/contact', [ShopController::class, 'contact'])->name('contact');
 Route::get('/product/{slug}', [ShopController::class, 'show'])->name('product.show');
-// Route::get('/categories/{slug}', [ShopController::class, 'category'])->name('category');
 
 // Route::get('/login', [ShopController::class, 'login'])->name('login');
-
 // Route::get('/register', [ShopController::class, 'register'])->name('register');
 
 Route::get('/dashboard', function () {
@@ -34,6 +28,8 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    Route::get('/account', [ShopController::class, 'account'])->name('account');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -50,14 +46,17 @@ Route::middleware('auth')->group(function () {
     //checkout
     Route::get('/checkout', [ShopController::class, 'checkout'])->name('checkout');
     Route::post('/checkout', [ShopController::class, 'checkoutStore'])->name('checkout.store');
+
+    Route::get('/order-success/{order_code}', [\App\Http\Controllers\OrderController::class, 'order_success'])->name('order-success');
 });
 
 //Admin route
 
 Route::middleware(['is_admin'])->prefix('/admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
-    // Route::get('/search', [AdminController::class, 'search'])->name('search');
 
+
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+    
     //Route user
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
@@ -116,6 +115,7 @@ Route::middleware(['is_admin'])->prefix('/admin')->name('admin.')->group(functio
         Route::put('/{id}', [OrderController::class, 'updateStatus'])->name('updateStatus');
         // Route::put('/{id}', [OrderController::class, 'update'])->name('update');
     });
+
 });
 
 require __DIR__ . '/auth.php';

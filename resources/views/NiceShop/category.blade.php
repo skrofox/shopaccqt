@@ -142,10 +142,9 @@
                             <!-- Toys & Games Category -->
                             @foreach ($categories as $category)
                                 <li class="category-item">
-                                    <div class="d-flex justify-content-between align-items-center category-header collapsed"
-                                        data-bs-toggle="collapse" data-bs-target="#categories-1-toys-subcategories"
+                                    <div class="d-flex justify-content-between align-items-center category-header"
                                         aria-expanded="false" aria-controls="categories-1-toys-subcategories">
-                                        <a href="route('categories.show')" class="category-link">{{ $category->name }}</a>
+                                        <a href="{{ route('category', ['query' => $category->slug]) }}" class="category-link">{{ $category->name }}</a>
                                         <span class="category-toggle">
                                             <i class="bi bi-chevron-down"></i>
                                             <i class="bi bi-chevron-up"></i>
@@ -419,7 +418,7 @@
             <div class="col-lg-8">
 
                 <!-- Category Header Section -->
-                <section id="category-header" class="category-header section">
+                {{-- <section id="category-header" class="category-header section">
 
                     <div class="container" data-aos="fade-up">
 
@@ -428,8 +427,8 @@
                             <div class="row g-3">
                                 <div class="col-12 col-md-6 col-lg-4">
                                     <div class="filter-item search-form">
-                                        <label for="productSearch" class="form-label">Search Products</label>
-                                        <form action="{{ route('product-search') }}" method="get">
+                                        <label for="productSearch" class="form-label">Tìm kiếm</label>
+                                        <form action="" method="get">
                                             <div class="input-group">
                                                 <input type="text" class="form-control" id="productSearch" name="query"
                                                     placeholder="Search for products..." aria-label="Search for products">
@@ -516,7 +515,8 @@
 
                     </div>
 
-                </section><!-- /Category Header Section -->
+                </section> --}}
+                <!-- /Category Header Section -->
 
                 <!-- Category Product List Section -->
                 <section id="category-product-list" class="category-product-list section">
@@ -525,43 +525,51 @@
 
                         <div class="row g-4">
                             <!-- Product 1 -->
-                            <div class="col-6 col-xl-4">
-                                <div class="product-card" data-aos="zoom-in">
-                                    <div class="product-image">
-                                        <img src="assets/img/product/product-f-1.webp" class="main-image img-fluid"
-                                            alt="Product">
-                                        <img src="assets/img/product/product-f-2.webp" class="hover-image img-fluid"
-                                            alt="Product Variant">
-                                        <div class="product-overlay">
-                                            <div class="product-actions">
-                                                <button type="button" class="action-btn" data-bs-toggle="tooltip"
-                                                    title="Quick View">
-                                                    <i class="bi bi-eye"></i>
-                                                </button>
-                                                <button type="button" class="action-btn" data-bs-toggle="tooltip"
-                                                    title="Add to Cart">
-                                                    <i class="bi bi-cart-plus"></i>
-                                                </button>
+                            @foreach ($products as $product)
+                                <div class="col-6 col-xl-4">
+                                    <div class="product-card" data-aos="zoom-in">
+                                        <div class="product-image">
+                                            @if ($product->images->count() > 0)
+                                                <img src="{{ Storage::url($product->images->first()->name) }}"
+                                                    class="main-image img-fluid" alt="Product">
+                                                <img src="{{ Storage::url($product->images->first()->name) }}"
+                                                    class="hover-image img-fluid" alt="Product Variant">
+                                            @else
+                                                <img src="{{ asset('assets/img/default.png') }}" alt="Featured Product"
+                                                    class="img-fluid">
+                                            @endif
+                                            <div class="product-overlay">
+                                                <div class="product-actions">
+                                                    <button type="button" class="action-btn" data-bs-toggle="tooltip"
+                                                        title="Quick View">
+                                                        <i class="bi bi-eye"></i>
+                                                    </button>
+                                                    <button type="button" class="action-btn" data-bs-toggle="tooltip"
+                                                        title="Add to Cart">
+                                                        <i class="bi bi-cart-plus"></i>
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="product-details">
-                                        <div class="product-category">Women's Fashion</div>
-                                        <h4 class="product-title"><a href="product-details.html">Tempor Incididunt</a>
-                                        </h4>
-                                        <div class="product-meta">
-                                            <div class="product-price">$129.00</div>
-                                            <div class="product-rating">
+                                        <div class="product-details">
+                                            <div class="product-category">{{ $product->category->name }}</div>
+                                            <h4 class="product-title"><a
+                                                    href="{{ route('product.show', $product->slug) }}">{{ $product->name }}</a>
+                                            </h4>
+                                            <div class="product-meta">
+                                                <div class="product-price" style="color: #795548">
+                                                    {{ number_format($product->price) }}</div>
+                                                {{-- <div class="product-rating">
                                                 <i class="bi bi-star-fill"></i>
                                                 4.8 <span>(42)</span>
+                                            </div> --}}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            @endforeach
 
-                            <!-- Product 2 -->
-                            <div class="col-6 col-xl-4">
+                            {{-- <div class="col-6 col-xl-4">
                                 <div class="product-card" data-aos="zoom-in" data-aos-delay="100">
                                     <div class="product-image">
                                         <img src="assets/img/product/product-m-1.webp" class="main-image img-fluid"
@@ -596,7 +604,6 @@
                                 </div>
                             </div>
 
-                            <!-- Product 3 -->
                             <div class="col-6 col-xl-4">
                                 <div class="product-card" data-aos="zoom-in" data-aos-delay="200">
                                     <div class="product-image">
@@ -635,7 +642,6 @@
                                 </div>
                             </div>
 
-                            <!-- Product 4 -->
                             <div class="col-6 col-xl-4">
                                 <div class="product-card" data-aos="zoom-in" data-aos-delay="300">
                                     <div class="product-image">
@@ -670,7 +676,6 @@
                                 </div>
                             </div>
 
-                            <!-- Product 5 -->
                             <div class="col-6 col-xl-4">
                                 <div class="product-card" data-aos="zoom-in" data-aos-delay="400">
                                     <div class="product-image">
@@ -705,7 +710,6 @@
                                 </div>
                             </div>
 
-                            <!-- Product 6 -->
                             <div class="col-6 col-xl-4">
                                 <div class="product-card" data-aos="zoom-in" data-aos-delay="500">
                                     <div class="product-image">
@@ -744,7 +748,6 @@
                                 </div>
                             </div>
 
-                            <!-- Product 7 -->
                             <div class="col-6 col-xl-4">
                                 <div class="product-card" data-aos="zoom-in" data-aos-delay="600">
                                     <div class="product-image">
@@ -780,7 +783,6 @@
                                 </div>
                             </div>
 
-                            <!-- Product 8 -->
                             <div class="col-6 col-xl-4">
                                 <div class="product-card" data-aos="zoom-in" data-aos-delay="700">
                                     <div class="product-image">
@@ -814,7 +816,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
 
                         </div>
 
@@ -823,7 +825,7 @@
                 </section><!-- /Category Product List Section -->
 
                 <!-- Category Pagination Section -->
-                <section id="category-pagination" class="category-pagination section">
+                {{-- <section id="category-pagination" class="category-pagination section">
 
                     <div class="container">
                         <nav class="d-flex justify-content-center" aria-label="Page navigation">
@@ -853,8 +855,11 @@
                         </nav>
                     </div>
 
-                </section><!-- /Category Pagination Section -->
-
+                </section> --}}
+                <!-- /Category Pagination Section -->
+                <div>
+                    {{ $products->links() }}
+                </div>
             </div>
 
         </div>

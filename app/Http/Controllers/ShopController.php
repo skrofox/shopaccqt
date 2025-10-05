@@ -29,6 +29,24 @@ class ShopController extends Controller
         return view('NiceShop.index', compact('newProduct', 'products', 'categories'));
     }
 
+    public function account()
+    {
+        $user = Auth::user()->load('infos');
+        $orders = Order::where('user_id', $user->id)
+        ->with('product')
+        ->orderByDesc('created_at')
+        ->get()
+        ->groupBy('order_code');
+        // ->paginate(5);
+        // dd($orders);
+        return view('NiceShop.account', compact('user', 'orders'));
+    }
+
+    public function contact()
+    {
+        return view('NiceShop.contact');
+    }
+
     public function search(Request $request)
     {
         $query = trim($request->input('query'));
@@ -52,11 +70,11 @@ class ShopController extends Controller
     }
 
 
-    public function category()
-    {
-        $categories = Category::where('is_active', 1)->get();
-        return view('NiceShop.category', compact('categories'));
-    }
+    // public function category()
+    // {
+    //     $categories = Category::where('is_active', 1)->get();
+    //     return view('NiceShop.category', compact('categories'));
+    // }
 
     public function addToCart(Request $request)
     {
@@ -191,10 +209,12 @@ class ShopController extends Controller
 
     public function checkout()
     {
+        $user = Auth::user()->load('infos');
         $carts = CartItem::with(['product.category', 'product.images', 'product.stocks'])
             ->where('user_id', Auth::id())
             ->get();
-        return view('NiceShop.checkout', compact('carts'));
+        // dd($carts);
+        return view('NiceShop.checkout', compact('carts', 'user'));
     }
 
     public function about()
@@ -313,43 +333,40 @@ class ShopController extends Controller
             }
 
             // Sử dụng transaction để đảm bảo tính toàn vẹn dữ liệu
-            DB::transaction(function () use ($carts, $user_id, $payment_method_text, $name, $address, $phone, $save_address) {
-                foreach ($carts as $item) {
-                    // Kiểm tra sản phẩm còn tồn tại không
-                    if (!$item->product) {
-                        throw new \Exception("Sản phẩm trong giỏ hàng không còn tồn tại");
-                    }
-
-                    // Kiểm tra tồn kho trước khi tạo đơn hàng
-                    $stock = Stock::where('product_id', $item->product_id)->first();
-                    if ($stock && $stock->on_hand < $item->quantity) {
-                        throw new \Exception("Sản phẩm '{$item->product->name}' chỉ còn {$stock->on_hand} trong kho, không đủ cho số lượng {$item->quantity} bạn yêu cầu");
-                    }
-
-                    // Tạo đơn hàng
-                    $order = Order::create([
-                        'user_id' => $user_id,
-                        'product_id' => $item->product_id,
-                        'quantity' => $item->quantity,
-                        'total_price' => $item->total_price,
-                        'payment_method' => $payment_method_text,
-                        'customer_name' => $name,
-                        'customer_address' => $address,
-                        'customer_phone' => $phone,
-                        'status' => 'pending', // Trạng thái đơn hàng
-                        'order_date' => now(),
-                    ]);
-
-                    // Cập nhật tồn kho
-                    if ($stock) {
-                        $stock->on_hand -= $item->quantity;
-                        $stock->save();
-                    }
+            $order_code = 'ORD-' . uniqid();
+            foreach ($carts as $item) {
+                // Kiểm tra sản phẩm còn tồn tại không
+                if (!$item->product) {
+                    throw new \Exception("Sản phẩm trong giỏ hàng không còn tồn tại");
                 }
 
-                // Xóa giỏ hàng sau khi tạo đơn hàng thành công
-                CartItem::where('user_id', $user_id)->delete();
-            });
+                // Kiểm tra tồn kho trước khi tạo đơn hàng
+                $stock = Stock::where('product_id', $item->product_id)->first();
+                if ($stock && $stock->on_hand < $item->quantity) {
+                    throw new \Exception("Sản phẩm '{$item->product->name}' chỉ còn {$stock->on_hand} trong kho, không đủ cho số lượng {$item->quantity} bạn yêu cầu");
+                }
+
+
+                // Tạo đơn hàng
+                $order = Order::create([
+                    'user_id' => $user_id,
+                    'product_id' => $item->product_id,
+                    'quantity' => $item->quantity,
+                    'total_price' => $item->total_price,
+                    'payment_method' => $payment_method_text,
+                    'payment_status' => 'unpaid',
+                    'order_code' => $order_code,
+                ]);
+
+                // Cập nhật tồn kho
+                if ($stock) {
+                    $stock->on_hand -= $item->quantity;
+                    $stock->save();
+                }
+            }
+
+            // Xóa giỏ hàng sau khi tạo đơn hàng thành công
+            CartItem::where('user_id', $user_id)->delete();
 
             // Cập nhật hoặc tạo mới thông tin user nếu được yêu cầu
             if ($save_address) {
@@ -367,13 +384,13 @@ class ShopController extends Controller
                 $successMessage .= 'Đơn hàng sẽ được giao trong vòng 2-3 ngày làm việc.';
             }
 
-            return redirect()->route('home')->with('success', $successMessage);
+            return redirect()->route('order-success', ['order_code' => $order_code])->with('success', $successMessage);
         } catch (\Exception $e) {
             // Log lỗi để debug
-            Log::error('Checkout error: ' . $e->getMessage(), [
-                'user_id' => Auth::id(),
-                'request_data' => $request->except(['_token']),
-            ]);
+            // Log::error('Checkout error: ' . $e->getMessage(), [
+            //     'user_id' => Auth::id(),
+            //     'request_data' => $request->except(['_token']),
+            // ]);
 
             return redirect()->back()
                 ->withInput()
