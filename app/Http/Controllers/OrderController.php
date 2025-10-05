@@ -26,4 +26,34 @@ class OrderController extends Controller
 
         return view('NiceShop.order-confirmation', compact('user', 'orders', 'order_code'));
     }
+
+    public function order_received($order_code)
+    {
+        $order = Order::where('order_code', $order_code)
+            ->where('status', 'processing');
+
+        if ($order) {
+            $order->update([
+                'payment_status' => 'paid',
+                'status' => 'completed',
+            ]);
+            return back()->with('success', 'Da nhan duoc hang');
+        } else {
+            return back()->with('error', 'Loi!');
+        }
+    }
+
+    public function cancelled_order($order_code)
+    {
+        $order = Order::where('order_code', $order_code);
+
+        if ($order) {
+            $order->update([
+                'status' => 'cancelled',
+            ]);
+            return back()->with('success', 'Da huy don hang');
+        } else {
+            return back()->with('error', 'Loi!');
+        }
+    }
 }

@@ -47,6 +47,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/checkout', [ShopController::class, 'checkout'])->name('checkout');
     Route::post('/checkout', [ShopController::class, 'checkoutStore'])->name('checkout.store');
 
+    Route::put('/order-cancelled/{order_code}', [\App\Http\Controllers\OrderController::class, 'cancelled_order'])->name('cancelled.order');
+    Route::put('/order-received/{order_code}', [\App\Http\Controllers\OrderController::class, 'order_received'])->name('order.received');
     Route::get('/order-success/{order_code}', [\App\Http\Controllers\OrderController::class, 'order_success'])->name('order-success');
 });
 

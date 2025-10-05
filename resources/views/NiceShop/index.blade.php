@@ -15,8 +15,8 @@
                         bạn cần với ưu đãi độc quyền và giao hàng nhanh chóng.
                     </p>
                     <div class="hero-actions" data-aos="fade-up" data-aos-delay="200">
-                        <a href="#products" class="btn-primary">Mua Sắm Ngay</a>
-                        <a href="#categories" class="btn-secondary">Xem Danh Mục</a>
+                        <a href="{{ route('category') }}" class="btn-primary">Mua Sắm Ngay</a>
+                        <a href="{{ route('category') }}" class="btn-secondary">Xem Danh Mục</a>
                     </div>
                     <div class="features-list" data-aos="fade-up" data-aos-delay="300">
                         <div class="feature-item">

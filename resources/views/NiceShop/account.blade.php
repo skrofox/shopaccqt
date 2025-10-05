@@ -6,6 +6,8 @@
 @section('content')
 
 
+
+
     <!-- Page Title -->
     <div class="page-title light-background">
         <div class="container d-lg-flex justify-content-between align-items-center">
@@ -67,12 +69,12 @@
                                     <span class="badge">12</span>
                                     </a>
                                 </li> --}}
-                                <li class="nav-item">
+                                {{-- <li class="nav-item">
                                     <a class="nav-link" data-bs-toggle="tab" href="#wallet">
                                         <i class="bi bi-wallet2"></i>
                                         <span>Phương thức thanh toán</span>
                                     </a>
-                                </li>
+                                </li> --}}
                                 <li class="nav-item">
                                     <a class="nav-link" data-bs-toggle="tab" href="#reviews">
                                         <i class="bi bi-star"></i>
@@ -154,6 +156,15 @@
                                                     <span class="value">#{{ $order->first()->order_code }}</span>
                                                 </div>
                                                 <div class="order-date">{{ $order->first()->created_at }}</div>
+                                                @if ($order->first()->status != 'completed' && $order->first()->status != 'processing')
+                                                    <form action="{{ route('cancelled.order', $order->first()->order_code) }}" method="post">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <button type="submit">
+                                                            Hủy đơn
+                                                        </button>
+                                                    </form>
+                                                @endif
                                             </div>
                                             <div class="order-content">
                                                 <div class="product-grid">
@@ -165,8 +176,19 @@
                                                 <div class="order-info">
                                                     <div class="info-row">
                                                         <span>Trạng thái</span>
-                                                        <span
-                                                            class="status processing">{{ $order->first()->status }}</span>
+                                                        @if ($order->first()->status == 'processing')
+                                                            <span
+                                                                class="status shipped">{{ $order->first()->status }}</span>
+                                                        @elseif ($order->first()->status == 'completed')
+                                                            <span
+                                                                class="status delivered">{{ $order->first()->status }}</span>
+                                                        @elseif ($order->first()->status == 'pending')
+                                                            <span
+                                                                class="status processing">{{ $order->first()->status }}</span>
+                                                        @elseif ($order->first()->status == 'cancelled')
+                                                            <span
+                                                                class="status cancelled">{{ $order->first()->status }}</span>
+                                                        @endif
                                                     </div>
                                                     <div class="info-row">
                                                         <span>Số hàng</span>
@@ -181,10 +203,37 @@
                                             </div>
                                             <div class="order-footer">
                                                 <button type="button" class="btn-track" data-bs-toggle="collapse"
-                                                    data-bs-target="#tracking{{ $loop->iteration }}" aria-expanded="false">Theo dõi
+                                                    data-bs-target="#tracking{{ $loop->iteration }}"
+                                                    aria-expanded="false">Theo dõi
                                                     đơn</button>
                                                 <button type="button" class="btn-details" data-bs-toggle="collapse"
-                                                    data-bs-target="#details{{ $loop->iteration }}" aria-expanded="false">Xem chi tiết</button>
+                                                    data-bs-target="#details{{ $loop->iteration }}"
+                                                    aria-expanded="false">Xem chi tiết</button>
+                                            </div>
+                                            <div class="__order-footer"
+                                                style="margin-top: 24px;justify-self: center;width: max-content;">
+                                                @if ($order->first()->status == 'completed')
+                                                    <a href=""
+                                                        style="border: 1px solid #252223; padding: 8px 24px;">Đánh giá
+                                                        ngay</a>
+                                                @else
+                                                    <form
+                                                        action="{{ route('order.received', $order->first()->order_code) }}"
+                                                        method="post">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <button type="submit" class="btn-received"
+                                                            style="width: 500px; background-color: #252223; color: white;"
+                                                            @if (!now()->greaterThan($order->first()->created_at->addDays(3)) && $order->first()->status == 'processing') disabled @endif>Đã nhận được
+                                                            hàng</button>
+                                                        {{-- <p>{{ $order->first()->created_at->addDays(3) }}</p> --}}
+                                                        <style>
+                                                            .__order-footer:hover {
+                                                                background-color: #393436;
+                                                            }
+                                                        </style>
+                                                    </form>
+                                                @endif
                                             </div>
 
                                             <!-- Order Tracking -->
@@ -197,7 +246,8 @@
                                                         <div class="timeline-content">
                                                             <h5>Xác nhận đơn hàng</h5>
                                                             <p>Bạn đã xác nhận đặt hàng</p>
-                                                            <span class="timeline-date">{{ $order->first()->created_at }}</span>
+                                                            <span
+                                                                class="timeline-date">{{ $order->first()->created_at }}</span>
                                                         </div>
                                                     </div>
 
@@ -212,24 +262,42 @@
                                                         </div>
                                                     </div>
 
-                                                    <div class="timeline-item active">
-                                                        <div class="timeline-icon">
-                                                            <i class="bi bi-box-seam"></i>
+                                                    @if ($order->first()->status == 'processing')
+                                                        <div class="timeline-item completed">
+                                                            <div class="timeline-icon">
+                                                                <i class="bi bi-check-circle-fill"></i>
+                                                            </div>
+                                                            <div class="timeline-content">
+                                                                <h5>Đóng gói</h5>
+                                                                <p>Người bán đã gửi hàng đi</p>
+                                                                <span
+                                                                    class="timeline-date">{{ $order->first()->updated_at }}</span>
+                                                            </div>
                                                         </div>
-                                                        <div class="timeline-content">
-                                                            <h5>Packaging</h5>
-                                                            <p>Your items are being packaged for shipping</p>
-                                                            <span class="timeline-date">Feb 20, 2025 - 4:15 PM</span>
+                                                    @else
+                                                        <div class="timeline-item active">
+                                                            <div class="timeline-icon">
+                                                                <i class="bi bi-box-seam"></i>
+                                                            </div>
+                                                            <div class="timeline-content">
+                                                                <h5>Đóng gói</h5>
+                                                                <p>Người bán đang chuẩn bị hàng</p>
+                                                                <span
+                                                                    class="timeline-date">{{ $order->first()->updated_at }}</span>
+                                                            </div>
                                                         </div>
-                                                    </div>
+                                                    @endif
+
 
                                                     <div class="timeline-item">
                                                         <div class="timeline-icon">
                                                             <i class="bi bi-truck"></i>
                                                         </div>
                                                         <div class="timeline-content">
-                                                            <h5>In Transit</h5>
-                                                            <p>Expected to ship within 24 hours</p>
+                                                            <h5>Đang vận chuyển</h5>
+                                                            <p>Đơn hàng sẽ được đem đến trong vòng từ 3-5 ngày kể từ lúc
+                                                                đặt
+                                                                hàng</p>
                                                         </div>
                                                     </div>
 
@@ -238,8 +306,8 @@
                                                             <i class="bi bi-house-door"></i>
                                                         </div>
                                                         <div class="timeline-content">
-                                                            <h5>Delivery</h5>
-                                                            <p>Estimated delivery: Feb 22, 2025</p>
+                                                            <h5>Đã nhận hàng</h5>
+                                                            <p>Estimated delivery: Feb xx, 20xx</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -694,7 +762,7 @@
                             </div>
 
                             <!-- Payment Methods Tab -->
-                            <div class="tab-pane fade" id="wallet">
+                            {{-- <div class="tab-pane fade" id="wallet">
                                 <div class="section-header" data-aos="fade-up">
                                     <h2>Payment Methods</h2>
                                     <div class="header-actions">
@@ -760,7 +828,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <!-- Reviews Tab -->
                             <div class="tab-pane fade" id="reviews">
