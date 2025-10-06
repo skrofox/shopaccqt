@@ -188,10 +188,10 @@
                                                 <i class="bi bi-bag-plus"></i>
                                                 Thêm Vào Giỏ
                                             </button>
-                                            <button class="btn secondary-action" type="submit" name="action">
+                                            {{-- <button class="btn secondary-action" type="submit" name="action">
                                                 <i class="bi bi-lightning"></i>
                                                 Mua Ngay
-                                            </button>
+                                            </button> --}}
                                             <button class="btn icon-action" title="Add to Wishlist" type="submit"
                                                 name="action">
                                                 <i class="bi bi-heart"></i>
