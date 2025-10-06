@@ -157,7 +157,9 @@
                                                 </div>
                                                 <div class="order-date">{{ $order->first()->created_at }}</div>
                                                 @if ($order->first()->status != 'completed' && $order->first()->status != 'processing')
-                                                    <form action="{{ route('cancelled.order', $order->first()->order_code) }}" method="post">
+                                                    <form
+                                                        action="{{ route('cancelled.order', $order->first()->order_code) }}"
+                                                        method="post">
                                                         @csrf
                                                         @method('PUT')
                                                         <button type="submit">
@@ -213,9 +215,153 @@
                                             <div class="__order-footer"
                                                 style="margin-top: 24px;justify-self: center;width: max-content;">
                                                 @if ($order->first()->status == 'completed')
-                                                    <a href=""
-                                                        style="border: 1px solid #252223; padding: 8px 24px;">Đánh giá
-                                                        ngay</a>
+                                                    <a href="#" data-bs-toggle="modal"
+                                                        data-bs-target="#ratingModal"
+                                                        style="border: 1px solid #252223; padding: 8px 24px; text-decoration:none;">
+                                                        Đánh giá ngay
+                                                    </a>
+
+                                                    <!-- Modal -->
+                                                    <div class="modal fade" id="ratingModal" tabindex="-1"
+                                                        aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title">Đánh giá sản phẩm</h5>
+                                                                    <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal"
+                                                                        aria-label="Đóng"></button>
+                                                                </div>
+                                                                @if (session('success'))
+                                                                    <div class="alert alert-success mx-3 my-2">
+                                                                        {{ session('success') }}
+                                                                    </div>
+                                                                @endif
+                                                                @foreach ($order as $item)
+                                                                    <div
+                                                                        style="border: 1px solid #252223; margin: 8px 16px; border-radius: 10px;">
+                                                                        @if (isset($reviews[$item->product->id]))
+                                                                            <form
+                                                                                action="{{ route('review.delete', $reviews[$item->product->id]) }}"
+                                                                                method="POST" style="display:inline;">
+                                                                                @csrf
+                                                                                @method('DELETE')
+                                                                                <button type="submit"
+                                                                                    class="btn btn-danger"
+                                                                                    onclick="return confirm('Bạn có chắc muốn xóa đánh giá này không?')">
+                                                                                    Xóa đánh giá
+                                                                                </button>
+                                                                            </form>
+                                                                        @endif
+                                                                        <form
+                                                                            action="{{ route('quick.assessment', $item->product->id) }}"
+                                                                            method="post">
+                                                                            @csrf
+                                                                            <div class="modal-body">
+                                                                                @if (isset($reviews[$item->product->id]))
+                                                                                    <div>
+                                                                                        <span class="text-success"><b>Đã
+                                                                                                đánh
+                                                                                                giá</b></span>
+                                                                                    </div>
+                                                                                @else
+                                                                                    <div>
+                                                                                        <span class="text-warning"><b>Chưa
+                                                                                                đánh
+                                                                                                giá</b></span>
+                                                                                    </div>
+                                                                                @endif
+                                                                                <label for="">Tên sản phẩm:
+                                                                                    <b>{{ $item->product->name }}</b></label><br>
+                                                                                <label for="">Số lượng:
+                                                                                    <b>{{ $item->quantity }}</b></label><br>
+                                                                                <img src="{{ Storage::url($item->product->images->first()->name ?? asset('assets/img/default.png')) }}"
+                                                                                    alt="{{ $item->product->name }}"
+                                                                                    style="width: 100px;"><br>
+
+                                                                                <div class="score-stars"
+                                                                                    style="margin-top: 24px; color: rgb(230, 230, 22)">
+                                                                                    <label style="color: black">Số
+                                                                                        sao:</label>
+                                                                                    <i class="bi bi-star"
+                                                                                        data-value="1"></i>
+                                                                                    <i class="bi bi-star"
+                                                                                        data-value="2"></i>
+                                                                                    <i class="bi bi-star"
+                                                                                        data-value="3"></i>
+                                                                                    <i class="bi bi-star"
+                                                                                        data-value="4"></i>
+                                                                                    <i class="bi bi-star"
+                                                                                        data-value="5"></i>
+                                                                                    <input type="hidden" name="rating"
+                                                                                        value="{{ old($reviews[$item->product->id]->rating ?? 5, 5) }}">
+                                                                                </div>
+
+                                                                                <p>Bạn chọn: <span
+                                                                                        class="rating-value">5</span> sao
+                                                                                </p>
+                                                                                <textarea class="form-control" name="assessment" placeholder="Nhập đánh giá...">{{ $reviews[$item->product->id]->content ?? '' }}</textarea>
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button"
+                                                                                    class="btn btn-secondary"
+                                                                                    data-bs-dismiss="modal">Hủy</button>
+                                                                                @if (isset($reviews[$item->product->id]))
+                                                                                    <button type="submit"
+                                                                                        class="btn btn-outline-secondary">Cập
+                                                                                        nhật</button>
+                                                                                @else
+                                                                                    <button type="submit"
+                                                                                        class="btn btn-primary">Gửi đánh
+                                                                                        giá</button>
+                                                                                @endif
+                                                                            </div>
+                                                                        </form>
+                                                                    </div>
+                                                                @endforeach
+
+                                                                <script>
+                                                                    document.querySelectorAll('.score-stars').forEach(starContainer => {
+                                                                        const stars = starContainer.querySelectorAll('i');
+                                                                        const ratingValueEl = starContainer.parentElement.querySelector('.rating-value');
+                                                                        const hiddenInput = starContainer.querySelector('input[name="rating"]');
+                                                                        let currentRating = 5; // ⭐ mặc định 5 sao
+
+                                                                        function updateStars(value) {
+                                                                            stars.forEach((s, index) => {
+                                                                                s.classList.remove('active');
+                                                                                s.classList.replace('bi-star-fill', 'bi-star');
+                                                                                if (index < value) {
+                                                                                    s.classList.add('active');
+                                                                                    s.classList.replace('bi-star', 'bi-star-fill');
+                                                                                }
+                                                                            });
+                                                                            ratingValueEl.textContent = value;
+                                                                            hiddenInput.value = value;
+                                                                        }
+
+                                                                        stars.forEach(star => {
+                                                                            star.addEventListener('click', () => {
+                                                                                currentRating = parseInt(star.getAttribute('data-value'));
+                                                                                updateStars(currentRating);
+                                                                            });
+                                                                        });
+
+                                                                        // Hiển thị mặc định 5 sao
+                                                                        updateStars(currentRating);
+                                                                    });
+                                                                </script>
+                                                                @if (session('open_modal'))
+                                                                    <script>
+                                                                        document.addEventListener("DOMContentLoaded", function() {
+                                                                            const ratingModal = new bootstrap.Modal(document.getElementById('ratingModal'));
+                                                                            ratingModal.show();
+                                                                        });
+                                                                    </script>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 @else
                                                     <form
                                                         action="{{ route('order.received', $order->first()->order_code) }}"
@@ -262,7 +408,7 @@
                                                         </div>
                                                     </div>
 
-                                                    @if ($order->first()->status == 'processing')
+                                                    @if ($order->first()->status == 'processing' || $order->first()->status == 'completed')
                                                         <div class="timeline-item completed">
                                                             <div class="timeline-icon">
                                                                 <i class="bi bi-check-circle-fill"></i>
@@ -272,6 +418,17 @@
                                                                 <p>Người bán đã gửi hàng đi</p>
                                                                 <span
                                                                     class="timeline-date">{{ $order->first()->updated_at }}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="timeline-item completed">
+                                                            <div class="timeline-icon">
+                                                                <i class="bi bi-check-circle-fill"></i>
+                                                            </div>
+                                                            <div class="timeline-content">
+                                                                <h5>Đang vận chuyển</h5>
+                                                                <p>Đơn hàng sẽ được đem đến trong vòng từ 3-5 ngày kể từ lúc
+                                                                    đặt
+                                                                    hàng</p>
                                                             </div>
                                                         </div>
                                                     @else
@@ -286,20 +443,20 @@
                                                                     class="timeline-date">{{ $order->first()->updated_at }}</span>
                                                             </div>
                                                         </div>
+                                                        <div class="timeline-item">
+                                                            <div class="timeline-icon">
+                                                                <i class="bi bi-truck"></i>
+                                                            </div>
+                                                            <div class="timeline-content">
+                                                                <h5>Đang vận chuyển</h5>
+                                                                <p>Đơn hàng sẽ được đem đến trong vòng từ 3-5 ngày kể từ lúc
+                                                                    đặt
+                                                                    hàng</p>
+                                                            </div>
+                                                        </div>
                                                     @endif
 
 
-                                                    <div class="timeline-item">
-                                                        <div class="timeline-icon">
-                                                            <i class="bi bi-truck"></i>
-                                                        </div>
-                                                        <div class="timeline-content">
-                                                            <h5>Đang vận chuyển</h5>
-                                                            <p>Đơn hàng sẽ được đem đến trong vòng từ 3-5 ngày kể từ lúc
-                                                                đặt
-                                                                hàng</p>
-                                                        </div>
-                                                    </div>
 
                                                     <div class="timeline-item">
                                                         <div class="timeline-icon">

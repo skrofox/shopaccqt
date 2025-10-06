@@ -241,12 +241,13 @@
                     <div class="info-tabs-container">
                         <nav class="tabs-navigation nav">
                             <button class="nav-link active" data-bs-toggle="tab"
-                                data-bs-target="#ecommerce-product-details-5-overview" type="button">Overview</button>
-                            <button class="nav-link" data-bs-toggle="tab"
+                                data-bs-target="#ecommerce-product-details-5-overview" type="button">Tổng quát</button>
+                            {{-- <button class="nav-link" data-bs-toggle="tab"
                                 data-bs-target="#ecommerce-product-details-5-technical" type="button">Technical
-                                Details</button>
+                                Details</button> --}}
                             <button class="nav-link" data-bs-toggle="tab"
-                                data-bs-target="#ecommerce-product-details-5-customer-reviews" type="button">Reviews
+                                data-bs-target="#ecommerce-product-details-5-customer-reviews" type="button">Đánh giá /
+                                Bình luận
                                 (127)</button>
                         </nav>
 
@@ -257,13 +258,10 @@
                                     <div class="row g-4">
                                         <div class="col-lg-8">
                                             <div class="content-section">
-                                                <h3>Product Overview</h3>
-                                                <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut
-                                                    fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem
-                                                    sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor
-                                                    sit amet, consectetur, adipisci velit.</p>
+                                                <h3>Tổng quan về sản phẩm</h3>
+                                                <p>{{ $product->description }}.</p>
 
-                                                <h4>Key Highlights</h4>
+                                                {{-- <h4>Điểm Nổi Bật</h4>
                                                 <div class="highlights-grid">
                                                     <div class="highlight-card">
                                                         <i class="bi bi-volume-up"></i>
@@ -285,11 +283,11 @@
                                                         <h5>Comfort Fit</h5>
                                                         <p>Lorem ipsum dolor sit amet consectetur adipiscing</p>
                                                     </div>
-                                                </div>
+                                                </div> --}}
                                             </div>
                                         </div>
 
-                                        <div class="col-lg-4">
+                                        {{-- <div class="col-lg-4">
                                             <div class="package-contents">
                                                 <h4>Package Contents</h4>
                                                 <ul class="contents-list">
@@ -301,13 +299,14 @@
                                                     <li><i class="bi bi-check-circle"></i>Warranty Documentation</li>
                                                 </ul>
                                             </div>
-                                        </div>
+                                        </div> --}}
+                                        
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Technical Details Tab -->
-                            <div class="tab-pane fade" id="ecommerce-product-details-5-technical">
+                            {{-- <div class="tab-pane fade" id="ecommerce-product-details-5-technical">
                                 <div class="technical-content">
                                     <div class="row g-4">
                                         <div class="col-md-6">
@@ -415,7 +414,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <!-- Reviews Tab -->
                             <div class="tab-pane fade" id="ecommerce-product-details-5-customer-reviews">

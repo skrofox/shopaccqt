@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\InfoUser;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Review;
 use App\Models\Stock;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,13 +34,15 @@ class ShopController extends Controller
     {
         $user = Auth::user()->load('infos');
         $orders = Order::where('user_id', $user->id)
-        ->with('product')
-        ->orderByDesc('created_at')
-        ->get()
-        ->groupBy('order_code');
-        // ->paginate(5);
-        // dd($orders);
-        return view('NiceShop.account', compact('user', 'orders'));
+            ->with('product')
+            ->orderByDesc('created_at')
+            ->get()
+            ->groupBy('order_code');
+        $reviews = Review::where('user_id', $user->id)
+            ->get()
+            ->keyBy('product_id');
+        // dd($reviews);
+        return view('NiceShop.account', compact('user', 'orders', 'reviews'));
     }
 
     public function contact()

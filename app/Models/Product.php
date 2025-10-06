@@ -38,4 +38,8 @@ class Product extends Model
     {
         return $this->hasOne(Stock::class);
     }
+
+    public function reviews(){
+        return $this->hasMany(Review::class, 'product_id', 'id');
+    }
 }

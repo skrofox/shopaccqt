@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\StockController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -50,6 +51,12 @@ Route::middleware('auth')->group(function () {
     Route::put('/order-cancelled/{order_code}', [\App\Http\Controllers\OrderController::class, 'cancelled_order'])->name('cancelled.order');
     Route::put('/order-received/{order_code}', [\App\Http\Controllers\OrderController::class, 'order_received'])->name('order.received');
     Route::get('/order-success/{order_code}', [\App\Http\Controllers\OrderController::class, 'order_success'])->name('order-success');
+
+
+    Route::post('/review/store/{order_code}', [ReviewController::class, 'store'])->name('review');
+    Route::post('/quick-assessment/{id}', [ReviewController::class, 'quick_assessment'])->name('quick.assessment');
+    Route::delete('/review/delete/{id}', [ReviewController::class, 'delete_review'])->name('review.delete');
+
 });
 
 //Admin route
