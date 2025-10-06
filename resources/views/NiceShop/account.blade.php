@@ -280,7 +280,7 @@
                                                                                     style="width: 100px;"><br>
 
                                                                                 <div class="score-stars"
-                                                                                    style="margin-top: 24px; color: rgb(230, 230, 22)">
+                                                                                    style="margin-top: 24px; color: #f59e0b">
                                                                                     <label style="color: black">Số
                                                                                         sao:</label>
                                                                                     <i class="bi bi-star"
@@ -990,53 +990,56 @@
                             <!-- Reviews Tab -->
                             <div class="tab-pane fade" id="reviews">
                                 <div class="section-header" data-aos="fade-up">
-                                    <h2>My Reviews</h2>
+                                    <h2>Đánh giá của bạn</h2>
                                     <div class="header-actions">
                                         <div class="dropdown">
                                             <button class="filter-btn" data-bs-toggle="dropdown">
                                                 <i class="bi bi-funnel"></i>
-                                                <span>Sort by: Recent</span>
+                                                <span>Sắp sếp theo: Gần nhất</span>
                                             </button>
                                             <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" href="#">Recent</a></li>
-                                                <li><a class="dropdown-item" href="#">Highest Rating</a></li>
-                                                <li><a class="dropdown-item" href="#">Lowest Rating</a></li>
+                                                <li><a class="dropdown-item" href="#">Gần nhất</a></li>
+                                                <li><a class="dropdown-item" href="#">Đánh giá cao</a></li>
+                                                {{-- <li><a class="dropdown-item" href="#">Lowest Rating</a></li> --}}
                                             </ul>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="reviews-grid">
-                                    <!-- Review Card 1 -->
-                                    <div class="review-card" data-aos="fade-up" data-aos-delay="100">
-                                        <div class="review-header">
-                                            <img src="assets/img/product/product-1.webp" alt="Product"
-                                                class="product-image" loading="lazy">
-                                            <div class="review-meta">
-                                                <h4>Lorem ipsum dolor sit amet</h4>
-                                                <div class="rating">
-                                                    <i class="bi bi-star-fill"></i>
-                                                    <i class="bi bi-star-fill"></i>
-                                                    <i class="bi bi-star-fill"></i>
-                                                    <i class="bi bi-star-fill"></i>
-                                                    <i class="bi bi-star-fill"></i>
-                                                    <span>5.0</span>
+                                    @foreach ($reviews as $review)
+                                        <div class="review-card" data-aos="fade-up" data-aos-delay="100">
+                                            <div class="review-header">
+                                                <img src="{{ Storage::url($review->product->images->first()->name ?? '/public/default.png') }}"
+                                                    alt="Product" class="product-image" loading="lazy">
+                                                <div class="review-meta">
+                                                    <h4>{{ $review->product->name }}</h4>
+                                                    <div class="rating">
+                                                        @for ($i = 0; $i < $review->rating; $i++)
+                                                            <i class="bi bi-star-fill"></i>
+                                                        @endfor
+                                                        {{-- <i class="bi bi-star-fill"></i>
+                                                        <i class="bi bi-star-fill"></i>
+                                                        <i class="bi bi-star-fill"></i>
+                                                        <i class="bi bi-star-fill"></i> --}}
+                                                        <span>{{ $review->rating }}.0</span>
+                                                    </div>
+                                                    <div class="review-date">Đánh giá vào lúc: {{ $review->created_at }}
+                                                    </div>
                                                 </div>
-                                                <div class="review-date">Reviewed on Feb 15, 2025</div>
+                                            </div>
+                                            <div class="review-content">
+                                                <p>{{ $review->content }}.</p>
+                                            </div>
+                                            <div class="review-footer">
+                                                <button type="button" class="btn-edit">Edit Review</button>
+                                                <button type="button" class="btn-delete">Delete</button>
                                             </div>
                                         </div>
-                                        <div class="review-content">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
-                                                tempor incididunt ut labore et dolore magna aliqua.</p>
-                                        </div>
-                                        <div class="review-footer">
-                                            <button type="button" class="btn-edit">Edit Review</button>
-                                            <button type="button" class="btn-delete">Delete</button>
-                                        </div>
-                                    </div>
+                                    @endforeach
 
                                     <!-- Review Card 2 -->
-                                    <div class="review-card" data-aos="fade-up" data-aos-delay="200">
+                                    {{-- <div class="review-card" data-aos="fade-up" data-aos-delay="200">
                                         <div class="review-header">
                                             <img src="assets/img/product/product-2.webp" alt="Product"
                                                 class="product-image" loading="lazy">
@@ -1061,51 +1064,52 @@
                                             <button type="button" class="btn-edit">Edit Review</button>
                                             <button type="button" class="btn-delete">Delete</button>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
 
                             <!-- Addresses Tab -->
                             <div class="tab-pane fade" id="addresses">
                                 <div class="section-header" data-aos="fade-up">
-                                    <h2>My Addresses</h2>
+                                    <h2>Địa chỉ của tôi</h2>
                                     <div class="header-actions">
                                         <button type="button" class="btn-add-new">
                                             <i class="bi bi-plus-lg"></i>
-                                            Add New Address
+                                            Thêm địa chỉ mới
                                         </button>
                                     </div>
                                 </div>
 
                                 <div class="addresses-grid">
                                     <!-- Address Card 1 -->
-                                    <div class="address-card default" data-aos="fade-up" data-aos-delay="100">
-                                        <div class="card-header">
-                                            <h4>Home</h4>
-                                            <span class="default-badge">Default</span>
-                                        </div>
-                                        <div class="card-body">
-                                            <p class="address-text">123 Main Street<br>Apt 4B<br>New York, NY
-                                                10001<br>United States</p>
-                                            <div class="contact-info">
-                                                <div><i class="bi bi-person"></i> Sarah Anderson</div>
-                                                <div><i class="bi bi-telephone"></i> +1 555 123-4567</div>
+                                    @foreach ($user->infos as $info)
+                                        <div class="address-card default" data-aos="fade-up" data-aos-delay="100">
+                                            <div class="card-header">
+                                                <h4>Nhà</h4>
+                                                <span class="default-badge">Mặc định</span>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="address-text">{{ $info->address }}</p>
+                                                <div class="contact-info">
+                                                    <div><i class="bi bi-person"></i> {{ $user->name }}</div>
+                                                    <div><i class="bi bi-telephone"></i> {{ $info->phone }}</div>
+                                                </div>
+                                            </div>
+                                            <div class="card-actions">
+                                                <button type="button" class="btn-edit">
+                                                    <i class="bi bi-pencil"></i>
+                                                    Sửa
+                                                </button>
+                                                <button type="button" class="btn-remove">
+                                                    <i class="bi bi-trash"></i>
+                                                    Xóa
+                                                </button>
                                             </div>
                                         </div>
-                                        <div class="card-actions">
-                                            <button type="button" class="btn-edit">
-                                                <i class="bi bi-pencil"></i>
-                                                Edit
-                                            </button>
-                                            <button type="button" class="btn-remove">
-                                                <i class="bi bi-trash"></i>
-                                                Remove
-                                            </button>
-                                        </div>
-                                    </div>
+                                    @endforeach
 
                                     <!-- Address Card 2 -->
-                                    <div class="address-card" data-aos="fade-up" data-aos-delay="200">
+                                    {{-- <div class="address-card" data-aos="fade-up" data-aos-delay="200">
                                         <div class="card-header">
                                             <h4>Office</h4>
                                         </div>
@@ -1128,56 +1132,62 @@
                                             </button>
                                             <button type="button" class="btn-make-default">Make Default</button>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
 
                             <!-- Settings Tab -->
                             <div class="tab-pane fade" id="settings">
                                 <div class="section-header" data-aos="fade-up">
-                                    <h2>Account Settings</h2>
+                                    <h2>Cài đặt tài khoản</h2>
                                 </div>
 
                                 <div class="settings-content">
                                     <!-- Personal Information -->
                                     <div class="settings-section" data-aos="fade-up">
-                                        <h3>Personal Information</h3>
-                                        <form class="php-email-form settings-form">
+                                        <h3>Thông tin người dùng</h3>
+                                        <form action="{{ route('account.update') }}"
+                                            method="POST">
+                                            @csrf
+                                            @method('PUT')
                                             <div class="row g-3">
                                                 <div class="col-md-6">
-                                                    <label for="firstName" class="form-label">First Name</label>
-                                                    <input type="text" class="form-control" id="firstName"
-                                                        value="Sarah" required="">
+                                                    <label for="firstName" class="form-label">Full Name</label>
+                                                    <input type="text" class="form-control" id="name"
+                                                        value="{{ $user->name }}" required>
                                                 </div>
-                                                <div class="col-md-6">
+                                                {{-- <div class="col-md-6">
                                                     <label for="lastName" class="form-label">Last Name</label>
                                                     <input type="text" class="form-control" id="lastName"
                                                         value="Anderson" required="">
-                                                </div>
+                                                </div> --}}
                                                 <div class="col-md-6">
                                                     <label for="email" class="form-label">Email</label>
                                                     <input type="email" class="form-control" id="email"
-                                                        value="sarah@example.com" required="">
+                                                        value="{{ $user->email }}" required>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="phone" class="form-label">Phone</label>
-                                                    <input type="tel" class="form-control" id="phone"
-                                                        value="+1 555 123-4567">
+                                                    <input type="text" pattern="[0-9]*" class="form-control" name="phone" value="{{ $info->phone }}">
                                                 </div>
                                             </div>
 
-                                            <div class="form-buttons">
-                                                <button type="submit" class="btn-save">Save Changes</button>
+                                            <div class="mt-3">
+                                                <button type="submit" class="border-collapse" style="border-radius: 8px; background-color: #252223; color: white;">Lưu thay đổi</button>
                                             </div>
 
-                                            <div class="loading">Loading</div>
-                                            <div class="error-message"></div>
-                                            <div class="sent-message">Your changes have been saved successfully!</div>
+                                            {{-- <div class="loading">Loading</div> --}}
+                                            @if (session('error'))
+                                                <div class="error-message">{{ $message }}</div>
+                                            @endif
+                                            @if (session('success'))
+                                                <div class="sent-message">Your changes have been saved successfully!</div>
+                                            @endif
                                         </form>
                                     </div>
 
                                     <!-- Email Preferences -->
-                                    <div class="settings-section" data-aos="fade-up" data-aos-delay="100">
+                                    {{-- <div class="settings-section" data-aos="fade-up" data-aos-delay="100">
                                         <h3>Email Preferences</h3>
                                         <div class="preferences-list">
                                             <div class="preference-item">
@@ -1212,48 +1222,53 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
 
                                     <!-- Security Settings -->
                                     <div class="settings-section" data-aos="fade-up" data-aos-delay="200">
-                                        <h3>Security</h3>
+                                        <h3>Bảo mật</h3>
                                         <form class="php-email-form settings-form">
                                             <div class="row g-3">
                                                 <div class="col-md-12">
-                                                    <label for="currentPassword" class="form-label">Current
-                                                        Password</label>
+                                                    <label for="currentPassword" class="form-label">Mật khẩu hiện
+                                                        tại</label>
                                                     <input type="password" class="form-control" id="currentPassword"
-                                                        required="">
+                                                        name="current_password">
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="newPassword" class="form-label">New Password</label>
                                                     <input type="password" class="form-control" id="newPassword"
-                                                        required="">
+                                                        name="new_password">
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="confirmPassword" class="form-label">Confirm
                                                         Password</label>
                                                     <input type="password" class="form-control" id="confirmPassword"
-                                                        required="">
+                                                        name="confirm_password">
                                                 </div>
                                             </div>
 
                                             <div class="form-buttons">
-                                                <button type="submit" class="btn-save">Update Password</button>
+                                                <button type="submit" class="btn-save">Cập nhật</button>
                                             </div>
 
                                             <div class="loading">Loading</div>
-                                            <div class="error-message"></div>
-                                            <div class="sent-message">Your password has been updated successfully!</div>
+                                            @if (session('error'))
+                                                <div class="error-message">{{ $message }}</div>
+                                            @endif
+                                            @if (session('success'))
+                                                <div class="sent-message">Your changes have been saved successfully!</div>
+                                            @endif
                                         </form>
                                     </div>
 
                                     <!-- Delete Account -->
                                     <div class="settings-section danger-zone" data-aos="fade-up" data-aos-delay="300">
-                                        <h3>Delete Account</h3>
+                                        <h3>Xóa tài khoản</h3>
                                         <div class="danger-zone-content">
-                                            <p>Once you delete your account, there is no going back. Please be certain.</p>
-                                            <button type="button" class="btn-danger">Delete Account</button>
+                                            <p>Một khi bạn đã xóa tài khoản, bạn sẽ không thể quay lại được nữa. Hãy chắc
+                                                chắn nhé.</p>
+                                            <button type="button" class="btn-danger">Xóa tài khoản</button>
                                         </div>
                                     </div>
                                 </div>
@@ -1266,6 +1281,26 @@
         </div>
 
     </section><!-- /Account Section -->
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Khi click tab, lưu ID tab vào localStorage
+            document.querySelectorAll('a[data-bs-toggle="tab"]').forEach(function(tabLink) {
+                tabLink.addEventListener('shown.bs.tab', function(e) {
+                    localStorage.setItem('activeTab', e.target.getAttribute('href'));
+                });
+            });
+
+            // Khi load lại trang, nếu có tab được lưu → mở lại
+            let activeTab = localStorage.getItem('activeTab');
+            if (activeTab) {
+                let someTabTriggerEl = document.querySelector(`a[href="${activeTab}"]`);
+                if (someTabTriggerEl) {
+                    new bootstrap.Tab(someTabTriggerEl).show();
+                }
+            }
+        });
+    </script>
 
 
 @endsection

@@ -300,7 +300,7 @@
                                                 </ul>
                                             </div>
                                         </div> --}}
-                                        
+
                                     </div>
                                 </div>
                             </div>
@@ -421,7 +421,7 @@
                                 <div class="reviews-content">
                                     <div class="reviews-header">
                                         <div class="rating-overview">
-                                            <div class="average-score">
+                                            {{-- <div class="average-score">
                                                 <div class="score-display">4.6</div>
                                                 <div class="score-stars">
                                                     <i class="bi bi-star-fill"></i>
@@ -430,7 +430,8 @@
                                                     <i class="bi bi-star-fill"></i>
                                                     <i class="bi bi-star-half"></i>
                                                 </div>
-                                                <div class="total-reviews">127 customer reviews</div>
+                                                <div class="total-reviews">{{ $reviews->count() }} người dùng đã đánh giá
+                                                </div>
                                             </div>
 
                                             <div class="rating-distribution">
@@ -469,110 +470,84 @@
                                                     </div>
                                                     <span class="count-label">1</span>
                                                 </div>
+                                            </div> --}}
+                                            <div class="average-score">
+                                                <div class="score-display">{{ $averageRating }}.0 <i
+                                                        class="bi bi-star-fill" style="color: #ffd700"></i></div>
+                                                <div class="score-stars">
+                                                    @for ($i = 1; $i <= 5; $i++)
+                                                        @if ($averageRating >= $i)
+                                                            <i class="bi bi-star-fill"></i>
+                                                        @elseif ($averageRating >= $i - 0.5)
+                                                            <i class="bi bi-star-half"></i>
+                                                        @else
+                                                            <i class="bi bi-star"></i>
+                                                        @endif
+                                                    @endfor
+                                                </div>
+                                                <div class="total-reviews">{{ $totalReviews }} người dùng đã đánh giá
+                                                </div>
                                             </div>
+
+                                            <div class="rating-distribution">
+                                                @for ($i = 5; $i >= 1; $i--)
+                                                    <div class="rating-row">
+                                                        <span class="stars-label">{{ $i }}★</span>
+                                                        <div class="progress-container">
+                                                            <div class="progress-fill"
+                                                                style="width: {{ $ratingPercents[$i] }}%;"></div>
+                                                        </div>
+                                                        <span class="count-label">{{ $ratingCounts[$i] }}</span>
+                                                    </div>
+                                                @endfor
+                                            </div>
+
                                         </div>
 
                                         <div class="write-review-cta">
-                                            <h4>Share Your Experience</h4>
-                                            <p>Help others make informed decisions</p>
-                                            <button class="btn review-btn">Write Review</button>
+                                            <h4>Bạn muốn chia sẻ ý kiến?</h4>
+                                            <p>Mua hàng để chia sẻ ý kiến của bạn!</p>
+                                            <button class="btn review-btn">Mua ngay</button>
                                         </div>
                                     </div>
 
                                     <div class="customer-reviews-list">
-                                        <div class="review-card">
-                                            <div class="reviewer-profile">
-                                                <img src="assets/img/person/person-f-3.webp" alt="Customer"
-                                                    class="profile-pic">
-                                                <div class="profile-details">
-                                                    <div class="customer-name">Sarah Martinez</div>
-                                                    <div class="review-meta">
-                                                        <div class="review-stars">
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
+                                        @foreach ($reviews as $review)
+                                            <div class="review-card">
+                                                <div class="reviewer-profile">
+                                                    <img src="assets/img/person/person-f-3.webp" alt="Customer"
+                                                        class="profile-pic">
+                                                    <div class="profile-details">
+                                                        <div class="customer-name">{{ $review->user->name }}</div>
+                                                        <div class="review-meta">
+                                                            <div class="review-stars">
+                                                                @for ($i = 0; $i < $review->rating; $i++)
+                                                                    <i class="bi bi-star-fill"></i>
+                                                                @endfor
+                                                            </div>
+                                                            </br>
+                                                            <span class="review-date">{{ $review->created_at }}</span>
                                                         </div>
-                                                        <span class="review-date">March 28, 2024</span>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <h5 class="review-headline">Outstanding audio quality and comfort</h5>
-                                            <div class="review-text">
-                                                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                                                    accusantium doloremque laudantium, totam rem aperiam. Eaque ipsa quae ab
-                                                    illo inventore veritatis et quasi architecto beatae vitae dicta sunt
-                                                    explicabo.</p>
-                                            </div>
-                                            <div class="review-actions">
-                                                <button class="action-btn"><i class="bi bi-hand-thumbs-up"></i> Helpful
-                                                    (12)</button>
-                                                <button class="action-btn"><i class="bi bi-chat-dots"></i> Reply</button>
-                                            </div>
-                                        </div>
-
-                                        <div class="review-card">
-                                            <div class="reviewer-profile">
-                                                <img src="assets/img/person/person-m-5.webp" alt="Customer"
-                                                    class="profile-pic">
-                                                <div class="profile-details">
-                                                    <div class="customer-name">David Chen</div>
-                                                    <div class="review-meta">
-                                                        <div class="review-stars">
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star"></i>
-                                                        </div>
-                                                        <span class="review-date">March 15, 2024</span>
-                                                    </div>
+                                                {{-- <h5 class="review-headline">Outstanding audio quality and comfort</h5> --}}
+                                                <div class="review-text">
+                                                    <p>{{ $review->content }}.</p>
+                                                </div>
+                                                <div class="review-actions">
+                                                    <form action="{{ route('helpful', $review->id) }}" method="post">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <button class="action-btn" type="submit"><i class="bi bi-hand-thumbs-up"></i>
+                                                            Hữu ích
+                                                            ({{ $review->helpful_vote }})
+                                                        </button>
+                                                    </form>
+                                                    {{-- <button class="action-btn"><i class="bi bi-chat-dots"></i>
+                                                        Reply</button> --}}
                                                 </div>
                                             </div>
-                                            <h5 class="review-headline">Great value, minor connectivity issues</h5>
-                                            <div class="review-text">
-                                                <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut
-                                                    fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem
-                                                    sequi nesciunt. Overall satisfied with the purchase.</p>
-                                            </div>
-                                            <div class="review-actions">
-                                                <button class="action-btn"><i class="bi bi-hand-thumbs-up"></i> Helpful
-                                                    (8)</button>
-                                                <button class="action-btn"><i class="bi bi-chat-dots"></i> Reply</button>
-                                            </div>
-                                        </div>
-
-                                        <div class="review-card">
-                                            <div class="reviewer-profile">
-                                                <img src="assets/img/person/person-f-7.webp" alt="Customer"
-                                                    class="profile-pic">
-                                                <div class="profile-details">
-                                                    <div class="customer-name">Emily Rodriguez</div>
-                                                    <div class="review-meta">
-                                                        <div class="review-stars">
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                            <i class="bi bi-star-fill"></i>
-                                                        </div>
-                                                        <span class="review-date">February 22, 2024</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <h5 class="review-headline">Perfect for work-from-home setup</h5>
-                                            <div class="review-text">
-                                                <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis
-                                                    praesentium voluptatum deleniti atque corrupti quos dolores et quas
-                                                    molestias excepturi sint occaecati cupiditate non provident.</p>
-                                            </div>
-                                            <div class="review-actions">
-                                                <button class="action-btn"><i class="bi bi-hand-thumbs-up"></i> Helpful
-                                                    (15)</button>
-                                                <button class="action-btn"><i class="bi bi-chat-dots"></i> Reply</button>
-                                            </div>
-                                        </div>
+                                        @endforeach
 
                                         <div class="load-more-section">
                                             <button class="btn load-more-reviews">Show More Reviews</button>

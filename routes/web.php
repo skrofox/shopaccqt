@@ -30,6 +30,7 @@ Route::get('/dashboard', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/account', [ShopController::class, 'account'])->name('account');
+    Route::put('/account/update', [ShopController::class, 'account_update'])->name('account.update');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -56,6 +57,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/review/store/{order_code}', [ReviewController::class, 'store'])->name('review');
     Route::post('/quick-assessment/{id}', [ReviewController::class, 'quick_assessment'])->name('quick.assessment');
     Route::delete('/review/delete/{id}', [ReviewController::class, 'delete_review'])->name('review.delete');
+    Route::put('/helpful/{id}', [ReviewController::class, 'helpful'])->name('helpful');
 
 });
 

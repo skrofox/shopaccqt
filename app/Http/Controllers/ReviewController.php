@@ -47,4 +47,10 @@ class ReviewController extends Controller
 
         return redirect()->back()->with(['success' => 'Đã xóa đánh giá.', 'open_modal' => true,]);
     }
+    public function helpful($id)
+    {
+        $review = Review::findOrFail($id);
+        $review->increment('helpful_vote');
+        return back()->with('message', 'Cảm ơn bạn đã đánh giá hữu ích!');
+    }
 }

@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\Review;
 use App\Models\Stock;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -45,6 +46,30 @@ class ShopController extends Controller
         return view('NiceShop.account', compact('user', 'orders', 'reviews'));
     }
 
+    public function account_update(Request $request)
+    {
+        $request->validate([
+            'name'  => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . Auth::id(),
+            'phone' => 'required|string|max:20',
+        ]);
+
+        $user = Auth::user();
+
+        $user->update([
+            'name'  => $request->input('name'),
+            'email' => $request->input('email'),
+        ]);
+
+        InfoUser::updateOrCreate(
+            ['user_id' => $user->id],
+            ['phone'   => $request->input('phone')]
+        );
+
+        return back()->with('success', 'Cập nhật thành công!');
+    }
+
+
     public function contact()
     {
         return view('NiceShop.contact');
@@ -69,7 +94,38 @@ class ShopController extends Controller
     public function show(string $slug)
     {
         $product = Product::where('is_active', 1)->where('slug', $slug)->first();
-        return view('NiceShop.product-details', compact('product'));
+        $reviews = Review::where('product_id', $product->id)->get();
+
+        $averageRating = round($reviews->avg('rating'), 1); // trung bình 1 số thập phân
+        $totalReviews = $reviews->count();
+
+        // đếm từng loại sao
+        $ratingCounts = [
+            5 => $reviews->where('rating', 5)->count(),
+            4 => $reviews->where('rating', 4)->count(),
+            3 => $reviews->where('rating', 3)->count(),
+            2 => $reviews->where('rating', 2)->count(),
+            1 => $reviews->where('rating', 1)->count(),
+        ];
+
+        // tính % cho thanh tiến trình
+        $ratingPercents = [];
+        foreach ($ratingCounts as $star => $count) {
+            $ratingPercents[$star] = $totalReviews > 0
+                ? round(($count / $totalReviews) * 100)
+                : 0;
+        }
+
+        return view('NiceShop.product-details', compact(
+            'product',
+            'reviews',
+            'averageRating',
+            'totalReviews',
+            'ratingCounts',
+            'ratingPercents'
+        ));
+
+        // return view('NiceShop.product-details', compact('product', 'reviews'));
     }
 
 
