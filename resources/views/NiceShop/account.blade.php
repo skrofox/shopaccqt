@@ -457,7 +457,17 @@
                                                     @endif
 
 
-
+                                                    @if ($order->first()->status == 'completed')
+                                                    <div class="timeline-item completed">
+                                                        <div class="timeline-icon">
+                                                            <i class="bi bi-check-circle-fill"></i>
+                                                        </div>
+                                                        <div class="timeline-content">
+                                                            <h5>Đã nhận hàng</h5>
+                                                            <p>Estimated delivery: Feb xx, 20xx</p>
+                                                        </div>
+                                                    </div>
+                                                    @else
                                                     <div class="timeline-item">
                                                         <div class="timeline-icon">
                                                             <i class="bi bi-house-door"></i>
@@ -467,6 +477,8 @@
                                                             <p>Estimated delivery: Feb xx, 20xx</p>
                                                         </div>
                                                     </div>
+                                                    @endif
+                                                    
                                                 </div>
                                             </div>
 

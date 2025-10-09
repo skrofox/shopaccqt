@@ -52,6 +52,9 @@
                                 <td>{{ $order->sum('quantity') }}</td>
                                 <td>{{ number_format($order->sum('total_price')) }}</td>
                                 <td>
+                                    @if($order->first()->status == 'completed')
+                                        <p style="color:green">Đã nhận</p>
+                                    @else
                                     <form action="{{ route('admin.orders.updateStatus', $order->first()->order_code) }}"
                                         method="POST">
                                         @csrf
@@ -69,6 +72,7 @@
                                             </option>
                                         </select>
                                     </form>
+                                    @endif
                                 </td>
 
                                 {{-- <td class="text-truncate" style="max-width: 50px" title="{{ $order->note }}">
