@@ -13,26 +13,30 @@ class ReviewController extends Controller
 
     public function quick_assessment($id, Request $request)
     {
-        // Review::create([
-        //     'user_id' => Auth::id(),
-        //     'product_id' => $id,
-        //     'content' => $request->input('assessment'),
-        //     'rating' => $request->input('rating'),
-        // ]);
+        $request->validate([
+            'order_code' => 'required|string',
+            'rating' => 'required|integer|min:1|max:5',
+            'assessment' => 'nullable|string',
+        ]);
+
+        $orderCode = $request->input('order_code');
+
         Review::updateOrCreate(
             [
                 'user_id' => Auth::id(),
-                'product_id' => $id
+                'product_id' => $id,
+                'order_code' => $orderCode,
             ],
             [
                 'content' => $request->input('assessment'),
-                'rating' => $request->input('rating')
+                'rating' => $request->input('rating'),
             ]
         );
 
         return redirect()->back()->with([
             'open_modal' => true,
-            'success' => 'Đã gửi đi đánh giá'
+            'rating_order_code' => $orderCode,
+            'success' => 'Đã gửi đi đánh giá',
         ]);
     }
     public function delete_review($id)
@@ -43,9 +47,14 @@ class ReviewController extends Controller
             abort(403);
         }
 
+        $orderCode = $review->order_code;
         $review->delete();
 
-        return redirect()->back()->with(['success' => 'Đã xóa đánh giá.', 'open_modal' => true,]);
+        return redirect()->back()->with([
+            'success' => 'Đã xóa đánh giá.',
+            'open_modal' => true,
+            'rating_order_code' => $orderCode,
+        ]);
     }
     public function helpful($id)
     {

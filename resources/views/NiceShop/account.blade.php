@@ -216,13 +216,13 @@
                                                 style="margin-top: 24px;justify-self: center;width: max-content;">
                                                 @if ($order->first()->status == 'completed')
                                                     <a href="#" data-bs-toggle="modal"
-                                                        data-bs-target="#ratingModal"
+                                                        data-bs-target="#ratingModal-{{ $order->first()->order_code }}"
                                                         style="border: 1px solid #252223; padding: 8px 24px; text-decoration:none;">
                                                         Đánh giá ngay
                                                     </a>
 
                                                     <!-- Modal -->
-                                                    <div class="modal fade" id="ratingModal" tabindex="-1"
+                                                    <div class="modal fade" id="ratingModal-{{ $order->first()->order_code }}" tabindex="-1"
                                                         aria-hidden="true">
                                                         <div class="modal-dialog">
                                                             <div class="modal-content">
@@ -240,9 +240,14 @@
                                                                 @foreach ($order as $item)
                                                                     <div
                                                                         style="border: 1px solid #252223; margin: 8px 16px; border-radius: 10px;">
-                                                                        @if (isset($reviews[$item->product->id]))
+                                                                        @php
+                                                                            $existingReview = $reviews->first(function($r) use ($item, $order) {
+                                                                                return $r->product_id === $item->product->id && $r->order_code === $order->first()->order_code;
+                                                                            });
+                                                                        @endphp
+                                                                        @if ($existingReview)
                                                                             <form
-                                                                                action="{{ route('review.delete', $reviews[$item->product->id]) }}"
+                                                                                action="{{ route('review.delete', $existingReview->id) }}"
                                                                                 method="POST" style="display:inline;">
                                                                                 @csrf
                                                                                 @method('DELETE')
@@ -258,7 +263,7 @@
                                                                             method="post">
                                                                             @csrf
                                                                             <div class="modal-body">
-                                                                                @if (isset($reviews[$item->product->id]))
+                                                                                @if ($existingReview)
                                                                                     <div>
                                                                                         <span class="text-success"><b>Đã
                                                                                                 đánh
@@ -294,19 +299,20 @@
                                                                                     <i class="bi bi-star"
                                                                                         data-value="5"></i>
                                                                                     <input type="hidden" name="rating"
-                                                                                        value="{{ old($reviews[$item->product->id]->rating ?? 5, 5) }}">
+                                                                                        value="{{ old('rating', $existingReview->rating ?? 5) }}">
+                                                                                    <input type="hidden" name="order_code" value="{{ $order->first()->order_code }}">
                                                                                 </div>
 
                                                                                 <p>Bạn chọn: <span
                                                                                         class="rating-value">5</span> sao
                                                                                 </p>
-                                                                                <textarea class="form-control" name="assessment" placeholder="Nhập đánh giá...">{{ $reviews[$item->product->id]->content ?? '' }}</textarea>
+                                                                                <textarea class="form-control" name="assessment" placeholder="Nhập đánh giá...">{{ $existingReview->content ?? '' }}</textarea>
                                                                             </div>
                                                                             <div class="modal-footer">
                                                                                 <button type="button"
                                                                                     class="btn btn-secondary"
                                                                                     data-bs-dismiss="modal">Hủy</button>
-                                                                                @if (isset($reviews[$item->product->id]))
+                                                                                @if ($existingReview)
                                                                                     <button type="submit"
                                                                                         class="btn btn-outline-secondary">Cập
                                                                                         nhật</button>
@@ -354,8 +360,12 @@
                                                                 @if (session('open_modal'))
                                                                     <script>
                                                                         document.addEventListener("DOMContentLoaded", function() {
-                                                                            const ratingModal = new bootstrap.Modal(document.getElementById('ratingModal'));
-                                                                            ratingModal.show();
+                                                                            const code = @json(session('rating_order_code'));
+                                                                            const modalEl = document.getElementById(`ratingModal-${code}`);
+                                                                            if (modalEl) {
+                                                                                const ratingModal = new bootstrap.Modal(modalEl);
+                                                                                ratingModal.show();
+                                                                            }
                                                                         });
                                                                     </script>
                                                                 @endif

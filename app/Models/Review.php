@@ -12,6 +12,7 @@ class Review extends Model
         'content',
         'rating',
         'helpful_vote',
+        'order_code',
     ];
 
     public function user(){
