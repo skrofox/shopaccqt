@@ -54,9 +54,7 @@
                     <div class="checkout-container" data-aos="fade-up">
                         <form class="" action="{{ route('checkout.store') }}" method="POST">
                             @csrf
-
                             <!-- Customer Information -->
-                            @foreach ($user->infos as $info)
                                 <div class="checkout-section" id="customer-info">
                                     <div class="section-header">
                                         <div class="section-number">1</div>
@@ -87,7 +85,7 @@
                                             <label for="phone">Số điện thoại <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control @error('phone') is-invalid @enderror"
                                                 name="phone" placeholder="Nhập số điện thoại (VD: 0987654321)" required
-                                                value="{{ old('phone', $info->phone) }}"
+                                                value="{{ old('phone', $user->infos->first()?->phone) }}"
                                                 title="Số điện thoại phải có 10-11 chữ số">
                                             @error('phone')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -109,13 +107,13 @@
                                                 class="form-control @error('address') is-invalid @enderror" name="address"
                                                 id="address"
                                                 placeholder="Nhập địa chỉ đầy đủ (số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố)"
-                                                required value="{{ old('address', $info->address) }}">
+                                                required value="{{ old('address', $user->infos->first()?->address) }}">
                                             @error('address')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                             <select name="choose_address" >
                                                 <option value="0">Chọn địa chỉ có sẵn</option>
-                                                <option value="">{{$info->address . ' - ' . $info->phone}}</option>
+                                                <option value="">{{$user->infos->first()?->address . ' - ' . $user->infos->first()?->phone}}</option>
                                             </select>
                                         </div>
 
@@ -129,7 +127,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            @endforeach
 
 
                             <!-- Payment Method -->

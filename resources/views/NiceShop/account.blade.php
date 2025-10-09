@@ -1092,7 +1092,7 @@
                                                 <p class="address-text">{{ $info->address }}</p>
                                                 <div class="contact-info">
                                                     <div><i class="bi bi-person"></i> {{ $user->name }}</div>
-                                                    <div><i class="bi bi-telephone"></i> {{ $info->phone }}</div>
+                                                    <div><i class="bi bi-telephone"></i> {{ $info?->phone ?? '' }}</div>
                                                 </div>
                                             </div>
                                             <div class="card-actions">
@@ -1168,7 +1168,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="phone" class="form-label">Phone</label>
-                                                    <input type="text" pattern="[0-9]*" class="form-control" name="phone" value="{{ $info->phone }}">
+                                                    <input type="text" pattern="[0-9]*" class="form-control" name="phone" value="{{ $info?->phone ?? '' }}">
                                                 </div>
                                             </div>
 
