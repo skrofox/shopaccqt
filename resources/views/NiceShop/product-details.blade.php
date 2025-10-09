@@ -76,7 +76,7 @@
                                     <i class="bi bi-star-fill"></i>
                                     <i class="bi bi-star-half"></i>
                                 </div>
-                                <span class="review-text">(127 reviews)</span>
+                                <span class="review-text">( {{ $totalReviews }} reviews)</span>
                             </div>
                         </div>
 
@@ -248,7 +248,7 @@
                             <button class="nav-link" data-bs-toggle="tab"
                                 data-bs-target="#ecommerce-product-details-5-customer-reviews" type="button">Đánh giá /
                                 Bình luận
-                                (127)</button>
+                                ({{ $totalReviews }})</button>
                         </nav>
 
                         <div class="tab-content">
@@ -518,7 +518,7 @@
                                                     <img src="assets/img/person/person-f-3.webp" alt="Customer"
                                                         class="profile-pic">
                                                     <div class="profile-details">
-                                                        <div class="customer-name">{{ $review->user->name }}</div>
+                                                        <div class="customer-name" style="display: flex">{{ $review->user->name }} - <p style="color:green">(Đã mua)</p></div>
                                                         <div class="review-meta">
                                                             <div class="review-stars">
                                                                 @for ($i = 0; $i < $review->rating; $i++)
