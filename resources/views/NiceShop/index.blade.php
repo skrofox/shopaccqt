@@ -188,10 +188,10 @@
                                             <i class="bi bi-star-fill"></i>
                                             <i class="bi bi-star-fill"></i>
                                             <i class="bi bi-star-fill"></i>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
                                         </div>
-                                        <span class="rating-count">(12)</span>
+                                        <span class="rating-count">({{ $product->reviews->count() }})</span>
                                     </div>
                                     <div class="product-price">{{ number_format($product->price) }} VND</div>
                                     {{-- <div class="color-swatches">

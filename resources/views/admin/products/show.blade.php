@@ -45,7 +45,7 @@
                     <div class="row g-3">
                         @forelse($product->images as $image)
                             <div class="col-6 col-md-4">
-                                <img src="{{ $image->url }}" alt="{{ $product->name }}" class="img-fluid rounded" />
+                                <img src="{{ Storage::url($image->name) }}" alt="{{ $product->name }}" class="img-fluid rounded" />
                             </div>
                         @empty
                             <div class="col-12">Chưa có hình ảnh</div>

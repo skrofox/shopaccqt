@@ -24,10 +24,10 @@ class ShopController extends Controller
     public function index()
     {
         //newProducts là lấy ra sản phẩm mới tạo trong 7 ngày
-        // $newProduct = Product::orderBy('created_at', 'desc')->first();
-        $newProduct = Product::where('is_active', 1)->orderBy('created_at', 'desc')->first();
+        $newProduct = Product::where('is_active', 1)->orderByDesc('created_at')->first();
         $products = Product::where('is_active', 1)->orderBy('created_at', 'desc')->take(8)->get();
         $categories = Category::where('is_active', 1)->take(5)->get();
+
         return view('NiceShop.index', compact('newProduct', 'products', 'categories'));
     }
 

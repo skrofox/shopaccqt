@@ -222,7 +222,8 @@
                                                     </a>
 
                                                     <!-- Modal -->
-                                                    <div class="modal fade" id="ratingModal-{{ $order->first()->order_code }}" tabindex="-1"
+                                                    <div class="modal fade"
+                                                        id="ratingModal-{{ $order->first()->order_code }}" tabindex="-1"
                                                         aria-hidden="true">
                                                         <div class="modal-dialog">
                                                             <div class="modal-content">
@@ -241,8 +242,13 @@
                                                                     <div
                                                                         style="border: 1px solid #252223; margin: 8px 16px; border-radius: 10px;">
                                                                         @php
-                                                                            $existingReview = $reviews->first(function($r) use ($item, $order) {
-                                                                                return $r->product_id === $item->product->id && $r->order_code === $order->first()->order_code;
+                                                                            $existingReview = $reviews->first(function (
+                                                                                $r,
+                                                                            ) use ($item, $order) {
+                                                                                return $r->product_id ===
+                                                                                    $item->product->id &&
+                                                                                    $r->order_code ===
+                                                                                        $order->first()->order_code;
                                                                             });
                                                                         @endphp
                                                                         @if ($existingReview)
@@ -300,7 +306,9 @@
                                                                                         data-value="5"></i>
                                                                                     <input type="hidden" name="rating"
                                                                                         value="{{ old('rating', $existingReview->rating ?? 5) }}">
-                                                                                    <input type="hidden" name="order_code" value="{{ $order->first()->order_code }}">
+                                                                                    <input type="hidden"
+                                                                                        name="order_code"
+                                                                                        value="{{ $order->first()->order_code }}">
                                                                                 </div>
 
                                                                                 <p>Bạn chọn: <span
@@ -468,27 +476,27 @@
 
 
                                                     @if ($order->first()->status == 'completed')
-                                                    <div class="timeline-item completed">
-                                                        <div class="timeline-icon">
-                                                            <i class="bi bi-check-circle-fill"></i>
+                                                        <div class="timeline-item completed">
+                                                            <div class="timeline-icon">
+                                                                <i class="bi bi-check-circle-fill"></i>
+                                                            </div>
+                                                            <div class="timeline-content">
+                                                                <h5>Đã nhận hàng</h5>
+                                                                <p>Estimated delivery: Feb xx, 20xx</p>
+                                                            </div>
                                                         </div>
-                                                        <div class="timeline-content">
-                                                            <h5>Đã nhận hàng</h5>
-                                                            <p>Estimated delivery: Feb xx, 20xx</p>
-                                                        </div>
-                                                    </div>
                                                     @else
-                                                    <div class="timeline-item">
-                                                        <div class="timeline-icon">
-                                                            <i class="bi bi-house-door"></i>
+                                                        <div class="timeline-item">
+                                                            <div class="timeline-icon">
+                                                                <i class="bi bi-house-door"></i>
+                                                            </div>
+                                                            <div class="timeline-content">
+                                                                <h5>Đã nhận hàng</h5>
+                                                                <p>Estimated delivery: Feb xx, 20xx</p>
+                                                            </div>
                                                         </div>
-                                                        <div class="timeline-content">
-                                                            <h5>Đã nhận hàng</h5>
-                                                            <p>Estimated delivery: Feb xx, 20xx</p>
-                                                        </div>
-                                                    </div>
                                                     @endif
-                                                    
+
                                                 </div>
                                             </div>
 
@@ -1168,8 +1176,7 @@
                                     <!-- Personal Information -->
                                     <div class="settings-section" data-aos="fade-up">
                                         <h3>Thông tin người dùng</h3>
-                                        <form action="{{ route('account.update') }}"
-                                            method="POST">
+                                        <form action="{{ route('account.update') }}" method="POST">
                                             @csrf
                                             @method('PUT')
                                             <div class="row g-3">
@@ -1190,12 +1197,15 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="phone" class="form-label">Phone</label>
-                                                    <input type="text" pattern="[0-9]*" class="form-control" name="phone" value="{{ $info?->phone ?? '' }}">
+                                                    <input type="text" pattern="[0-9]*" class="form-control"
+                                                        name="phone" value="{{ $info?->phone ?? '' }}">
                                                 </div>
                                             </div>
 
                                             <div class="mt-3">
-                                                <button type="submit" class="border-collapse" style="border-radius: 8px; background-color: #252223; color: white;">Lưu thay đổi</button>
+                                                <button type="submit" class="border-collapse"
+                                                    style="border-radius: 8px; background-color: #252223; color: white;">Lưu
+                                                    thay đổi</button>
                                             </div>
 
                                             {{-- <div class="loading">Loading</div> --}}
